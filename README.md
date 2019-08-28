@@ -1,7 +1,8 @@
 # IoTJackAC1
 
 'Yet another' command interpreter for Arduinos, receiving the user's commands via e.g. a serial or UDP connection.
-Liberal MIT license – essentially, any code can be reused by anyone for any purpose.
+
+MIT license.
 
 
 ## Main Features
@@ -21,7 +22,7 @@ Liberal MIT license – essentially, any code can be reused by anyone for any pu
 
 | Command | Description |
 | --- | --- |
-| configure udp0 outip=192.168.1.222 outport=6001 | A UDP Connection called ‘udp0’ is created by default. This command configures the output IP address to 192.168.1.222 and changes the output port from the default 5001 to 6001. |
+| configure udp0 outip=192.168.1.222 outport=6001 | (The application creates a UDP Connection called ‘udp0’ by default.) This command configures the output IP address to 192.168.1.222 and changes the output port from the default 5001 to 6001. |
 | add beacon beacon0 | Adds a Beacon called ‘beacon0’. |
 | configure beacon0 target=udp0 "text=Hi from xx" interval=1000 | Configures the Beacon to send text via Connection *udp0* every second. |
 | activate beacon0 | Applies the configuration and makes the Beacon active. |
