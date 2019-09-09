@@ -14,9 +14,11 @@ MIT license.
 * A Device, e.g. the board running the code, has a 'Part' for each input or output. The *ArduinoDevice* class includes setup for several boards and may be extended.
 * A Device may be configured to use a 'Shield' (see example class *ArduinoMFShield*), which then imposes its own Part configuration.
 * A Device may have 'User Parts' to cater for connected components, e.g. sensors, actuators and displays. The *UserPart* class is extended for each type - see example classes for DHT11/DHT22 sensors and NeoPixel displays.
-* Adapts to the current board type when compiled - see file *DetectBoard.h*.
+* Adapts to the selected board type when compiled - see file *DetectBoard.h*.
 * Configurable - see the #defines at the top of file *Globals.h*.
 * Macros – each macro stores one or more user commands on a line.
+* Filters - flexible filter system can control data rate from analog inputs, and debounce digital inputs.
+* Developed using Visual Studio and Visual Micro.
 
 
 ## Example User Commands
