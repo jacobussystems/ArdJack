@@ -1,4 +1,4 @@
-# IoTJackAC1
+# ArdJack
 
 'Yet another' command interpreter for Arduinos, receiving the user's commands via e.g. a serial or UDP connection.
 
