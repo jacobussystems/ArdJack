@@ -25,11 +25,11 @@ MIT license.
 
 | Command | Description |
 | --- | --- |
-| configure udp0 outip=192.168.1.222 outport=6001 | The application creates a UDP Connection called ‘udp0’ by default. This command configures the output IP address to 192.168.1.222 and changes the output port from the default 5001 to 6001. |
+| configure udp0 outip=192.168.1.222 outport=6001 | The application creates a UDP Connection called ‘udp0’ by default. This command configures the output IP address of *udp0* to 192.168.1.222 and changes its output port from the default 5001 to 6001. |
 | add beacon beacon0 | Adds a Beacon called ‘beacon0’. |
-| configure beacon0 target=udp0 "text=Hi from xx" interval=1000 | Configures the Beacon to send text via Connection *udp0* every second. |
-| activate beacon0 | Applies the configuration and makes the Beacon active. |
-| configure beacon0 interval=500 | Modifies the Beacon’s configuration. (If it was active, the command first deactivates the Beacon. After modifying the configuration, it is reactivated.) |
+| configure beacon0 target=udp0 "text=Hi from xx" interval=1000 | Configures *beacon0* to send text via Connection *udp0* every second. |
+| activate beacon0 | Applies the configuration and makes *beacon0* active. |
+| configure beacon0 interval=500 | Modifies *beacon0*’s configuration. (If it was active, the command first deactivates it. After modifying the configuration, it is reactivated.) |
 
 NOTE: Each command above is one line.
 
