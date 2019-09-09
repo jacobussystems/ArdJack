@@ -9,6 +9,7 @@ MIT license.
 
 * Works on Arduino MKR1010, Adafruit Feather M0, DEVKIT ESP32, SparkFun RedBoard Turbo, Arduino Due (no WiFi), and potentially any Arduino IDE-compatible board with at least 32 KB of SRAM. (N.B. Some combinations of active features may overflow memory on 32KB boards due to memory size and/or heap fragmentation.)
 * Includes support for WiFi, UDP, TCP, HTTP.
+* Includes 'Beacons' for sending regular output, and 'Data Loggers' for logging data inputs.
 * Object-oriented approach – there are user commands to create user objects: Devices, Connections, Beacons, Bridges etc., and to configure and use them. (Each has a corresponding C++ class.)
 * A Device, e.g. the board running the code, has a 'Part' for each input or output. The *ArduinoDevice* class includes setup for several boards and may be extended.
 * A Device may be configured to use a 'Shield' (see example class *ArduinoMFShield*), which then imposes its own Part configuration.
