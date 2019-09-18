@@ -1,6 +1,8 @@
 # ArdJack
 
-A command interpreter for Arduinos, receiving the user's commands via e.g. a serial or UDP connection.
+An open-source Arduino application intended as a helper / utility for IoT development.
+
+A command interpreter running on Arduinos receives the user's commands via e.g. a serial or UDP connection.
 
 MIT license.
 
@@ -33,12 +35,15 @@ NOTE: Each command above is one line.
 
 See the Wiki for more detail.
 
-The code is developed using Visual Studio 2019 with Visual Micro.
+
+## Source Code
+
+The source C++ files are in the `src` folder. The code is developed using Visual Studio 2019 with Visual Micro.
 
 
 ## ArdJackW
 
-ArdJackW is a Windows console application based on ArdJack, also developed in Visual Studio 2019.
+ArdJackW is a Windows console application based on ArdJack, and also developed in Visual Studio 2019.
 
-The source files are in the `src` folder, and there is an associated Unit Test project in subfolder `UnitTest1`.
+The source files are in the `ArdJackW/src` folder, and there is an associated Unit Test project in the `ArdJackW/UnitTest1` folder.
 
