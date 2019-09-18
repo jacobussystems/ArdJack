@@ -116,7 +116,7 @@ bool Part::AddConfig()
 	//if (NULL == Config)
 	//	Config = new Configuration();
 
-	////if (Config->AddIntegerItem("Pin", PRM("Pin number."), Pin) == NULL) return false;
+	////if (Config->AddIntegerProp("Pin", PRM("Pin number."), Pin) == NULL) return false;
 
 	//Config->SortItems();
 
@@ -237,7 +237,7 @@ bool Part::Configure(StringList* settings, int start, int count)
 			part = Owner->LookupPart(partName);
 
 			if (NULL != part)
-				Items[ItemCount++] = part;
+				Items[Count++] = part;
 		}
 
 		return true;

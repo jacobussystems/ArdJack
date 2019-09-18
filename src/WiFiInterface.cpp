@@ -122,12 +122,12 @@ bool WiFiInterface::AddConfig()
 	if (!NetworkInterface::AddConfig())
 		return false;
 
-	if (Config->AddStringItem(PRM("ConnectMode"), PRM("Connect mode (Open | WPA | WEP)."), "WPA") == NULL) return false;
-	if (Config->AddStringItem(PRM("DHCPHostname"), PRM("DHCP hostname."), "") == NULL) return false;
-	if (Config->AddIntegerItem(PRM("KeyIndex"), PRM("Key index (0-3, WEP only)."), _KeyIndex) == NULL) return false;
-	if (Config->AddStringItem(PRM("Password"), PRM("Password/passphrase."), "") == NULL) return false;
-	if (Config->AddStringItem(PRM("SSID"), PRM("SSID."), "") == NULL) return false;
-	if (Config->AddIntegerItem(PRM("Timeout"), PRM("Timeout."), _Timeout, "ms") == NULL) return false;
+	Config->AddStringProp(PRM("ConnectMode"), PRM("Connect mode (Open | WPA | WEP)."), "WPA");
+	Config->AddStringProp(PRM("DHCPHostname"), PRM("DHCP hostname."), "");
+	Config->AddIntegerProp(PRM("KeyIndex"), PRM("Key index (0-3, WEP only)."), _KeyIndex);
+	Config->AddStringProp(PRM("Password"), PRM("Password/passphrase."), "");
+	Config->AddStringProp(PRM("SSID"), PRM("SSID."), "");
+	Config->AddIntegerProp(PRM("Timeout"), PRM("Timeout."), _Timeout, "ms");
 
 	return Config->SortItems();
 }

@@ -88,10 +88,10 @@ bool SerialConnection::AddConfig()
 
 	Config->AddIntegerProp(PRM("Speed"), PRM("Speed (baud rate)."), 57600);
 
-	//Config->AddIntegerItem(PRM("DataBits"), PRM("Number of data bits."), 8);
-	//Config->AddIntegerItem(PRM("Parity"), PRM("Parity."), Parity.None);
-	//Config->AddIntegerItem(PRM("Port"), PRM("Port."), ComPort.COM6);
-	//Config->AddIntegerItem(PRM("StopBits"), PRM("Number of stop bits."), 1);
+	//Config->AddIntegerProp(PRM("DataBits"), PRM("Number of data bits."), 8);
+	//Config->AddIntegerProp(PRM("Parity"), PRM("Parity."), Parity.None);
+	//Config->AddIntegerProp(PRM("Port"), PRM("Port."), ComPort.COM6);
+	//Config->AddIntegerProp(PRM("StopBits"), PRM("Number of stop bits."), 1);
 
 	return Config->SortItems();
 }
@@ -156,7 +156,7 @@ bool SerialConnection::SendText(const char* text)
 	printf(text);
 #endif
 
-	TxCount += strlen(text);
+	TxCount += Utils::StringLen(text);
 	TxEvents++;
 
 	CheckAnnounce(true, text);
@@ -181,7 +181,7 @@ bool SerialConnection::SendTextQuiet(const char* text)
 	printf(text);
 #endif
 
-	TxCount += strlen(text);
+	TxCount += Utils::StringLen(text);
 	TxEvents++;
 
 	return true;

@@ -380,7 +380,7 @@ bool Displayer::DisplayHeader(const char* heading, const char* name)
 		strcat(temp, name);
 	}
 
-	int count = strlen(temp);
+	int count = Utils::StringLen(temp);
 	char line[82];
 	Utils::RepeatChar(line, '_', count);
 
@@ -399,7 +399,7 @@ bool Displayer::DisplayItem(const char* args)
 	Log::IncludeMemory = false;
 	Log::IncludeTime = false;
 
-	if ((NULL == args) || (strlen(args) == 0))
+	if (Utils::StringIsNullOrEmpty(args))
 	{
 		DisplayStatus();
 		Log::IncludeMemory = SaveLogIncludeMemory;
@@ -482,12 +482,14 @@ bool Displayer::DisplayItem(const char* args)
 bool Displayer::DisplayMacros()
 {
 	DisplayHeader(PRM("MACROS"));
-	MacroDef* pMacro;
 
-	for (int i = 0; i < Globals::Interpreter->MacroCount; i++)
+	const char* content;
+	char name[ARDJACK_MAX_NAME_LENGTH];
+
+	for (int i = 0; i < Globals::Interpreter->Macros.Count(); i++)
 	{
-		pMacro = Globals::Interpreter->Macros[i];
-		Log::LogInfo("  ", pMacro->Name, " = '", pMacro->Content, "'");
+		content = Globals::Interpreter->Macros.Get(i, name);
+		Log::LogInfoF(PRM("  %s = '%s'"), name, content);
 	}
 
 	return true;

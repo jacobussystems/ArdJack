@@ -130,8 +130,7 @@ Part* DeviceManager::AddPart(Device* dev, const char* text, const char* name, St
 }
 
 
-bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int oper, char* aName, StringList* values,
-	IoTMessage* request)
+bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int oper, char* aName, StringList* values)
 {
 	if (Globals::Verbosity > 4)
 	{
@@ -151,7 +150,7 @@ bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int op
 		char temp[10];
 		strcpy(temp, dev->Active() ? "1" : "0");
 
-		return dev->SendResponse(request, oper, "", temp);
+		return dev->SendResponse(oper, "", temp);
 	}
 
 	case ARDJACK_OPERATION_ADD:
@@ -210,7 +209,7 @@ bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int op
 		char temp[10];
 		strcpy(temp, dev->Active() ? "1" : "0");
 
-		return dev->SendResponse(request, oper, "", temp);
+		return dev->SendResponse(oper, "", temp);
 	}
 
 	case ARDJACK_OPERATION_FLASH:
@@ -240,7 +239,7 @@ bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int op
 
 		int partCount = dev->GetCount(partType);
 
-		return dev->SendResponse(request, oper, aName, Utils::Int2String(partCount));
+		return dev->SendResponse(oper, aName, Utils::Int2String(partCount));
 	}
 
 	case ARDJACK_OPERATION_GET_INFO:
@@ -248,7 +247,7 @@ bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int op
 		char temp[82];
 		sprintf(temp, "'%s' '%s' '%s'", dev->DeviceClass, dev->DeviceType, dev->DeviceVersion);
 
-		return dev->SendResponse(request, oper, "", temp);
+		return dev->SendResponse(oper, "", temp);
 	}
 
 	case ARDJACK_OPERATION_GET_INVENTORY:
@@ -256,7 +255,7 @@ bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int op
 		// Any subsequent argument -> 'include zero counts = true'.
 		bool includeZeroCounts = (values->Count > 0);
 
-		return dev->SendInventory(request, includeZeroCounts);
+		return dev->SendInventory(includeZeroCounts);
 	}
 
 	case ARDJACK_OPERATION_READ:
@@ -272,21 +271,21 @@ bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int op
 		char temp[20];
 		value.AsString(temp);
 
-		return dev->SendResponse(request, oper, part->Name, temp);
+		return dev->SendResponse(oper, part->Name, temp);
 	}
 
 	case ARDJACK_OPERATION_SUBSCRIBE:
 	{
 		// e.g. device ard subscribe di0
 		// e.g. device ard subscribe di
-		return SubscribePart(dev, aName, request, true);
+		return SubscribePart(dev, aName, true);
 	}
 
 	case ARDJACK_OPERATION_UNSUBSCRIBE:
 	{
 		// e.g. device ard unsubscribe di0
 		// e.g. device ard unsubscribe di
-		return SubscribePart(dev, aName, request, false);
+		return SubscribePart(dev, aName, false);
 	}
 
 	case ARDJACK_OPERATION_WRITE:
@@ -350,7 +349,7 @@ bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int op
 }
 
 
-bool DeviceManager::HandleDeviceRequest(Device* dev, const char* text, IoTMessage* request)
+bool DeviceManager::HandleDeviceRequest(Device* dev, const char* text)
 {
 	// Handle a Device Request, which probably results in executing a Device Operation.
 	if (NULL == dev)
@@ -361,10 +360,6 @@ bool DeviceManager::HandleDeviceRequest(Device* dev, const char* text, IoTMessag
 
 	if (Globals::Verbosity > 4)
 		Log::LogInfo(PRM("HandleDeviceRequest: Device '"), dev->Name, "', '", text, "'");
-
-	// Special case.
-	if (Utils::StringEquals(text, "mem"))
-		return Displayer::DisplayItem("memory");
 
 	char aName[ARDJACK_MAX_NAME_LENGTH];
 	StringList values;
@@ -377,7 +372,7 @@ bool DeviceManager::HandleDeviceRequest(Device* dev, const char* text, IoTMessag
 		return false;
 	}
 
-	return ExecuteDeviceOperation(dev, text, oper, aName, &values, request);
+	return ExecuteDeviceOperation(dev, text, oper, aName, &values);
 }
 
 
@@ -411,23 +406,7 @@ bool DeviceManager::Interact(const char* text)
 	if (handled) return true;
 
 	// Maybe it's a Device command?
-	IoTMessage msg;
-
-	switch (msg.Format)
-	{
-	case ARDJACK_MESSAGE_FORMAT_0:
-		break;
-
-	default:
-#ifdef ARDUINO
-		msg.SetReturnPath("device.ard");
-#else
-		msg.SetReturnPath("device.rem0");
-#endif
-		break;
-	}
-
-	return HandleDeviceRequest(dev, remainder, &msg);
+	return HandleDeviceRequest(dev, remainder);
 }
 
 
@@ -454,7 +433,7 @@ bool DeviceManager::InteractAction(Device* dev, const char* text, bool* handled)
 		bool includeZeroCounts = (count >= 2);
 		*handled = true;
 
-		return dev->SendInventory(NULL, includeZeroCounts);
+		return dev->SendInventory(includeZeroCounts);
 	}
 
 	if (Utils::StringEquals(action, "POLL", true))
@@ -548,7 +527,7 @@ int DeviceManager::LookupSubtype(const char* name)
 
 
 
-bool DeviceManager::SubscribePart(Device* dev, char* aName, IoTMessage* request, bool newState)
+bool DeviceManager::SubscribePart(Device* dev, char* aName, bool newState)
 {
 	// 'aName' can be a PART name, a PART TYPE name, or "ALL" / "*".
 	if (Utils::StringEquals(aName, "all") || Utils::StringEquals(aName, "*"))
@@ -598,6 +577,6 @@ bool DeviceManager::SubscribePart(Device* dev, char* aName, IoTMessage* request,
 	// Send a response.
 	int oper = newState ? ARDJACK_OPERATION_SUBSCRIBED : ARDJACK_OPERATION_UNSUBSCRIBED;
 
-	return dev->SendResponse(request, oper, aName, Utils::Bool210(newState));
+	return dev->SendResponse(oper, aName, Utils::Bool210(newState));
 }
 

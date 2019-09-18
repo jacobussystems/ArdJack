@@ -100,7 +100,7 @@ char* Table::Cell(char* text, const char* colText, int col)
 
 	TableColumnDef* colDef = ColumnDefs[col];
 
-	if ((NULL == colText) || (strlen(colText) == 0))
+	if (Utils::StringIsNullOrEmpty(colText))
 	{
 		// There's no text.
 		return Utils::RepeatChar(text, ' ', colDef->Width);
@@ -121,7 +121,7 @@ char* Table::Cell(char* text, const char* colText, int col)
 	{
 	case ARDJACK_HORZ_ALIGN_CENTRE:
 		{
-			int remainder = textWidth - (NULL != colText) ? strlen(colText) : 0;
+			int remainder = textWidth - (NULL != colText) ? Utils::StringLen(colText) : 0;
 
 			if (remainder <= 0)
 				strcat(text, colText);

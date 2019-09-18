@@ -37,15 +37,14 @@ class DeviceManager : public IoTManager
 protected:
 	virtual Part* AddPart(Device* dev, const char* text, const char* name, StringList* values);
 	virtual bool InteractAction(Device* dev, const char* text, bool* handled);
-	virtual bool SubscribePart(Device* dev, char* aName, IoTMessage* request, bool newState);
+	virtual bool SubscribePart(Device* dev, char* aName, bool newState);
 
 public:
 	DeviceManager();
 	~DeviceManager();
 
-	virtual bool ExecuteDeviceOperation(Device* dev, const char* text, int oper, char* aName, StringList* values,
-		IoTMessage* request);
-	virtual bool HandleDeviceRequest(Device* device, const char* text, IoTMessage* msg);
+	virtual bool ExecuteDeviceOperation(Device* dev, const char* text, int oper, char* aName, StringList* values);
+	virtual bool HandleDeviceRequest(Device* device, const char* text);
 	virtual bool Interact(const char* text) override;
 	virtual Device* LookupDevice(const char* name);
 	virtual int LookupSubtype(const char* name) override;

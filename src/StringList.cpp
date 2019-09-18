@@ -54,9 +54,9 @@ StringList::StringList(int size, bool autoExpand)
 StringList::~StringList()
 {
 	if (Globals::Verbosity > 7)
-		Log::LogInfoF(PRM("StringList::~: %p, Size %d, Count %d"), this, Size, Count);
+		Log::LogInfoF(PRM("StringList ~: %p, Size %d, Count %d"), this, Size, Count);
 
-	Clear();
+	Clear(true);
 }
 
 
@@ -65,7 +65,7 @@ bool StringList::Add(const char* text)
 	if (Globals::Verbosity > 9)
 		Log::LogInfoF(PRM("StringList::Add: %p, [%d] = '%s'"), this, Count, text);
 
-	int newLength = _Length + strlen(text) + 1;
+	int newLength = _Length + Utils::StringLen(text) + 1;
 
 	if (newLength > Size)
 	{
@@ -82,7 +82,7 @@ bool StringList::Add(const char* text)
 	}
 
 	strcpy(_Buffer + _Length, text);
-	_Length += strlen(text) + 1;
+	_Length += Utils::StringLen(text) + 1;
 
 	Count++;
 
@@ -103,8 +103,11 @@ void StringList::Clear(bool full)
 {
 	if (Globals::Verbosity > 6)
 	{
-		Log::LogInfoF(PRM("StringList::Clear: %p, full %d, Size %d, Count %d, _Length %d"),
-			this, full, Size, Count, _Length);
+		if (Count > 0)
+		{
+			Log::LogInfoF(PRM("StringList::Clear: %p, full %d, Size %d, Count %d, _Length %d"),
+				this, full, Size, Count, _Length);
+		}
 	}
 
 	if (full)
@@ -191,7 +194,7 @@ bool StringList::Put(int index, const char* text)
 	if (Globals::Verbosity > 9)
 		Log::LogInfoF(PRM("StringList::Put: %p, [%d] '%s' -> '%s'"), this, index, oldText, text);
 
-	int itemIncrease = strlen(text) - strlen(oldText);
+	int itemIncrease = (int)(strlen(text) - strlen(oldText));
 	int newSize;
 
 	bool usingNewBuffer = false;
@@ -267,7 +270,7 @@ bool StringList::Put_NewBuffer(int index, const char* text, int itemIncrease, ch
 
 	// Copy the new item 'index'.
 	strcpy(newBuffer + newLength, text);
-	newLength += strlen(text) + 1;
+	newLength += Utils::StringLen(text) + 1;
 
 	// Any items after 'index'?
 	if (index < Count - 1)
@@ -297,14 +300,14 @@ bool StringList::Remove(int index)
 	}
 
 	char* ptr = (char*)Get(index);
-	int oldItemLen = strlen(ptr) + 1;
+	int oldItemLen = Utils::StringLen(ptr) + 1;
 
 	// Is it the last item?
 	if (index < Count - 1)
 	{
 		// No - move down the remaining item(s).
 		const char* ptr2 = Get(index + 1);
-		int nMove = _Length - (ptr2 - _Buffer);
+		int nMove = (int)(_Length - (ptr2 - _Buffer));
 		memcpy(ptr, ptr2, nMove);
 	}
 

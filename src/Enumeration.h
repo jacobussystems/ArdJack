@@ -37,7 +37,6 @@ class Enumeration
 protected:
 
 public:
-	uint8_t ItemCount;
 	char Name[ARDJACK_MAX_NAME_LENGTH];
 	StringList Names;
 	Int8List Values;
@@ -47,6 +46,7 @@ public:
 
 	virtual bool Add(const char* name, int8_t value);
 	virtual void Clear();
+	virtual int Count();
 	virtual int8_t LookupName(const char* name, int8_t defaultValue = -1, bool quiet = false);
 	virtual const char* LookupValue(int8_t value, const char* defaultName = "?", bool quiet = false);	// returns the first match
 };

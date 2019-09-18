@@ -59,7 +59,7 @@ const char* FieldReplacer::FindMatchingOutro(const char* text)
 		if (strncmp(text + j, Params.Intro, strlen(Params.Intro)) == 0)
 		{
 			count++;
-			j += strlen(Params.Intro);
+			j += Utils::StringLen(Params.Intro);
 			continue;
 		}
 
@@ -69,7 +69,7 @@ const char* FieldReplacer::FindMatchingOutro(const char* text)
 				return text + j;
 
 			count--;
-			j += strlen(Params.Outro);
+			j += Utils::StringLen(Params.Outro);
 			continue;
 		}
 
@@ -145,7 +145,7 @@ bool FieldReplacer::ReplaceFields(const char* text, Dictionary* args, ReplaceFie
 		// We've found an 'intro'.
 
 		// Process the text up to and including the 'Intro'.
-		count = nextIntro - start;
+		count = (int)(nextIntro - start);
 		strncpy(temp, start, count);
 		temp[count] = NULL;
 
@@ -167,7 +167,7 @@ bool FieldReplacer::ReplaceFields(const char* text, Dictionary* args, ReplaceFie
 		
 		// Get the field expression.
 		char fieldExpr[102];
-		count = matchingOutro - start;
+		count = (int)(matchingOutro - start);
 		strncpy(fieldExpr, start, count);
 		fieldExpr[count] = NULL;
 
@@ -244,9 +244,7 @@ void FieldReplacer_ReplaceField(const char* fieldExpr, Dictionary* args, char* v
 	// 'args' takes precedence.
 	if ((NULL != args) && args->ContainsKey(fieldExpr))
 	{
-		// TEMPORARY:
-		args->Get(fieldExpr, value, 100);
-
+		strcpy(value, args->Get(fieldExpr));
 		return;
 	}
 

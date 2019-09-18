@@ -59,7 +59,7 @@ bool LogConnection::SendText(const char* text)
 	// Log this output line.
 	Log::LogInfo("LogConnection::SendText: ", text);
 
-	TxCount += (int)strlen(text);
+	TxCount += Utils::StringLen(text);
 	TxEvents++;
 
 	return true;

@@ -91,8 +91,9 @@ protected:
 	bool command_net(const char* args);
 #endif
 
-#ifdef ARDJACK_INCLUDE_TESTS
 	bool command_test(const char* args);
+
+#ifdef ARDJACK_INCLUDE_TESTS
 	bool command_tests(const char* args);
 #endif
 

@@ -147,8 +147,8 @@ bool StartupCommands();
 
 		// TEMPORARY:
 		// What mode shall we use for 'ser0'?
-		_Ser0->Routes[0]->Filter.PrefixFilter.Operation = ARDJACK_STRING_COMPARE_STARTS_WITH;
-		//_Ser0->Routes[0]->Filter.PrefixFilter.Operation = ARDJACK_STRING_COMPARE_TRUE;
+		_Ser0->Routes[0]->Filter.TextFilter.Operation = ARDJACK_STRING_COMPARE_STARTS_WITH;
+		//_Ser0->Routes[0]->Filter.TextFilter.Operation = ARDJACK_STRING_COMPARE_TRUE;
 
 		Globals::Clock->Start(1, 9, 2019, 0, 0, 0);
 
@@ -434,4 +434,3 @@ bool StartupCommands();
 
 		return true;
 	}
-

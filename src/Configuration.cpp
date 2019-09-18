@@ -208,9 +208,9 @@ bool Configuration::GetAsString(const char* path, char* value)
 
 bool Configuration::GetSizes(int *nameSize, int *valueSize, int *descSize)
 {
-	*nameSize = strlen("Name");
-	*valueSize = strlen("Value");
-	*descSize = strlen("Description");
+	*nameSize = Utils::StringLen("Name");
+	*valueSize = Utils::StringLen("Value");
+	*descSize = Utils::StringLen("Description");
 
 	char temp[82];
 	char value[82];
@@ -220,12 +220,12 @@ bool Configuration::GetSizes(int *nameSize, int *valueSize, int *descSize)
 		ConfigProp* prop = Properties[i];
 
 		// Check the Name size.
-		if ((int)strlen(prop->Name()) > *nameSize)
-			*nameSize = strlen(prop->Name());
+		if (Utils::StringLen(prop->Name()) > *nameSize)
+			*nameSize = Utils::StringLen(prop->Name());
 
 		// Check the Description size.
-		if ((int)strlen(prop->Description()) > *descSize)
-			*descSize = strlen(prop->Description());
+		if (Utils::StringLen(prop->Description()) > *descSize)
+			*descSize = Utils::StringLen(prop->Description());
 
 		// Check the Value + Unit size.
 		prop->GetAsString(value);
@@ -248,8 +248,8 @@ bool Configuration::GetSizes(int *nameSize, int *valueSize, int *descSize)
 			}
 		}
 
-		if ((int)strlen(temp) > *valueSize)
-			*valueSize = strlen(temp);
+		if (Utils::StringLen(temp) > *valueSize)
+			*valueSize = Utils::StringLen(temp);
 	}
 
 	return true;

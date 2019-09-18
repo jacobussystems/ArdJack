@@ -89,8 +89,8 @@ bool ArduinoNeoPixel::AddConfig()
 	//if (NULL == Config)
 	//	Config = new Configuration();
 
-	////if (Config->AddStringItem("Model", PRM("Model name (DHT11 | DHT22)."), "DHT11") == NULL) return false;
-	////if (Config->AddStringItem("Variable", PRM("Variable name (Temperature | Humidity)."), "Temperature") == NULL) return false;
+	////if (Config->AddStringProp("Model", PRM("Model name (DHT11 | DHT22)."), "DHT11") == NULL) return false;
+	////if (Config->AddStringProp("Variable", PRM("Variable name (Temperature | Humidity)."), "Temperature") == NULL) return false;
 
 	//Config->SortItems();
 

@@ -412,7 +412,7 @@ bool Connection::ProcessInput(const char* text)
 	bool handled = false;
 
 	// Blank line?
-	if ((NULL == text) || (strlen(text) == 0))
+	if (Utils::StringIsNullOrEmpty(text))
 		return true;
 
 	// Is this a 'comment' line?

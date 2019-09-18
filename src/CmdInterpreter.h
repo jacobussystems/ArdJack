@@ -34,7 +34,7 @@
 #include "Globals.h"
 
 class CommandSet;
-
+class Dictionary;
 
 
 
@@ -45,18 +45,17 @@ protected:
 public:
 	uint8_t CommandSetCount;
 	CommandSet* CommandSets[ARDJACK_MAX_COMMAND_SETS];
-	uint8_t MacroCount;
-	MacroDef* Macros[ARDJACK_MAX_MACROS];
+	Dictionary Macros;
 
 	CmdInterpreter();
 	~CmdInterpreter();
 
 	bool AddCommandSet(CommandSet* commandSet);
-	MacroDef* AddMacro(const char* name, const char* content);
+	bool AddMacro(const char* name, const char* content);
 	bool Execute(const char* multiLine);
 	bool ExecuteCommand(const char* line);
 	bool ExecuteMacro(const char* name, const char* content, const char* remainder);
-	MacroDef* LookupMacro(const char* name);
-	bool RemoveMacro(const char* name);
+	const char* LookupMacro(const char* name);
+	bool RemoveMacro(const char* name, bool quiet = false);
 };
 

@@ -32,9 +32,10 @@
 
 #include "CmdInterpreter.h"
 #include "CommandSet.h"
+#include "Dictionary.h"
 #include "Displayer.h"
-#include "Log.h"
 #include "Globals.h"
+#include "Log.h"
 #include "Part.h"
 #include "Utils.h"
 
@@ -46,26 +47,14 @@ CmdInterpreter::CmdInterpreter()
 		Log::LogInfoF(PRM("CmdInterpreter ctor"));
 
 	CommandSetCount = 0;
-	MacroCount = 0;
 	
 	for (int i = 0; i < ARDJACK_MAX_COMMAND_SETS; i++)
 		CommandSets[i] = NULL;
-
-	for (int i = 0; i < ARDJACK_MAX_MACROS; i++)
-		Macros[i] = NULL;
 }
 
 
 CmdInterpreter::~CmdInterpreter()
 {
-	for (int i = 0; i < ARDJACK_MAX_MACROS; i++)
-	{
-		if (NULL != Macros[i])
-		{
-			delete Macros[i];
-			Macros[i] = NULL;
-		}
-	}
 }
 
 
@@ -76,24 +65,15 @@ bool CmdInterpreter::AddCommandSet(CommandSet* commandSet)
 }
 
 
-MacroDef* CmdInterpreter::AddMacro(const char* name, const char* content)
+bool CmdInterpreter::AddMacro(const char* name, const char* content)
 {
-	MacroDef* result = LookupMacro(name);
-
-	if (NULL == result)
+	if (!Macros.ContainsKey(name))
 	{
 		if (Globals::Verbosity > 2)
 			Log::LogInfo(PRM("AddMacro: Adding Macro '"), name, "'");
-
-		result = new MacroDef();
-		strcpy(result->Name, name);
-		strcpy(result->Content, content);
-		Macros[MacroCount++] = result;
 	}
-	else
-		strcpy(result->Content, content);
 
-	return result;
+	return Macros.Add(name, content);
 }
 
 
@@ -181,10 +161,10 @@ bool CmdInterpreter::ExecuteCommand(const char* line)
 		Log::LogInfo(PRM("Not handled by CommandSet(s): '"), verb, "'");
 
 	// Is it a Macro?
-	MacroDef* pMacro = LookupMacro(verb);
+	const char* content = LookupMacro(verb);
 
-	if (NULL != pMacro)
-		return ExecuteMacro(pMacro->Name, pMacro->Content, remainder);
+	if (NULL != content)
+		return ExecuteMacro(verb, content, remainder);
 
 	// Is it an Object name, or 'Device.Part' syntax?
 	bool saveLogIncludeMemory = Log::IncludeMemory;
@@ -216,36 +196,31 @@ bool CmdInterpreter::ExecuteMacro(const char* name, const char* content, const c
 }
 
 
-MacroDef* CmdInterpreter::LookupMacro(const char* name)
+const char* CmdInterpreter::LookupMacro(const char* name)
 {
-	MacroDef* pMacro;
+	const char* result = Macros.Get(name);
 
-	for (int i = 0; i < MacroCount; i++)
+	if (NULL == result)
 	{
-		pMacro = Macros[i];
-
-		if (Utils::StringEquals(name, pMacro->Name))
-			return pMacro;
+		if (Globals::Verbosity > 7)
+			Log::LogInfoF(PRM("LookupMacro: Not a Macro: '%s'"), name);
+		return NULL;
 	}
 
-	if (Globals::Verbosity > 7)
-		Log::LogInfo(PRM("CmdInterpreter::LookupMacro: Not a Macro: '"), name, "'");
-
-	return NULL;
+	return result;
 }
 
 
-bool CmdInterpreter::RemoveMacro(const char* name)
+bool CmdInterpreter::RemoveMacro(const char* name, bool quiet)
 {
-	MacroDef* pMacro = LookupMacro(name);
-
-	if (NULL == pMacro)
+	if (!Macros.ContainsKey(name))
 	{
-		Log::LogWarning("RemoveMacro: No such Macro: ", name);
-		return false;
+		if (!quiet)
+			Log::LogWarningF(PRM("RemoveMacro: No such Macro: '%s'"), name);
+		return true;
 	}
 
-	// TODO:
+	Macros.Remove(name);
 
 	return true;
 }

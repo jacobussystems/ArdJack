@@ -80,7 +80,7 @@ bool NetworkManager::Interact(const char* text)
 	//		wifi0 status
 	//		wifi0 time
 
-	if ((NULL == text) || (strlen(text) == 0))
+	if (Utils::StringIsNullOrEmpty(text))
 		return true;
 
 	StringList fields;

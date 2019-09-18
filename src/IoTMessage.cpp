@@ -53,6 +53,9 @@ IoTMessage::IoTMessage()
 
 IoTMessage::~IoTMessage()
 {
+	if (Globals::Verbosity > 7)
+		Log::LogInfoF(PRM("IoTMessage ~: %p"), this);
+
 	if (NULL != _Items)
 		delete _Items;
 }
@@ -156,7 +159,7 @@ bool IoTMessage::DecodeFormat1(const char* line)
 
 	// Get the header and text (if any).
 	char header[ARDJACK_MAX_MESSAGE_WIRETEXT_LENGTH];
-	int count = (headerEnd - line) - 1;
+	int count = (int)(headerEnd - line) - 1;
 	strncpy(header, line + 1, count);
 	header[count] = NULL;
 

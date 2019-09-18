@@ -127,7 +127,7 @@ public:
 		int maxLength, bool trimFields = true);
 	static bool String2Bool(const char* text, bool defValue = false);
 	static int String2Comparison(const char* name, int defValue = ARDJACK_STRING_COMPARE_TRUE, bool quiet = false);
-	static double String2Double(const char* text, float defValue = 0.0);
+	static double String2Double(const char* text, double defValue = 0.0);
 	static float String2Float(const char* text, float defValue = 0.0);
 	static int String2Int(const char* text, int defValue = 0);
 	static long String2Long(const char* text, long defValue = 0);
@@ -135,6 +135,8 @@ public:
 	static bool StringContains(const char* value1, const char* value2, bool ignoreCase = true);
 	static bool StringEndsWith(const char* value1, const char* value2, bool ignoreCase = true);
 	static bool StringEquals(const char* value1, const char* value2, bool ignoreCase = true);
+	static bool StringIsNullOrEmpty(const char* text);
+	static int StringLen(const char* text);
 	static char* StringReplace(const char* source, const char* str1, const char* str2,
 		bool ignoreCase, char* out, int size);
 	static char* StringReplaceMultiHex(const char* source, char chars[], int replacements[], int count, char* out, int size);

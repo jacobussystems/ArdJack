@@ -111,7 +111,7 @@ int Dynamic::AsInt()
 		return _IntVal;
 
 	case ARDJACK_DATATYPE_REAL:
-		return _DoubleVal;
+		return Utils::Nint(_DoubleVal);
 
 	case ARDJACK_DATATYPE_STRING:
 		return atoi(_StringVal);

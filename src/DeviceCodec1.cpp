@@ -159,7 +159,7 @@ int DeviceCodec1::DecodeRequest(const char* line, char *aName, StringList* value
 
 	// There's a dot, e.g.
 	//	?ai.count
-	int charCount = dot - field0;
+	int charCount = (int)(dot - field0);
 	strncpy(aName, field0, charCount);
 	aName[charCount] = NULL;
 	Utils::Trim(aName);

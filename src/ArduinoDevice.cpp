@@ -59,7 +59,7 @@ bool ArduinoDevice::AddConfig()
 
 	Log::LogInfo(PRM("ArduinoDevice::AddConfig"));
 
-	//if (Config->AddStringItem("?", "?") == NULL) return false;
+	//if (Config->AddStringProp("?", "?") == NULL) return false;
 
 	return true;
 }

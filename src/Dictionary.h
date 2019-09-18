@@ -46,7 +46,6 @@ protected:
 	virtual int Lookup(const char* key);
 
 public:
-	int ItemCount;
 	StringList Keys;
 	StringList Values;
 
@@ -55,6 +54,9 @@ public:
 
 	virtual bool Add(const char* key, const char* value);
 	virtual bool ContainsKey(const char* key);
-	virtual const char* Get(const char* key, char* value, int count);
+	virtual int Count();
+	virtual const char* Get(const char* key);
+	virtual const char* Get(int index, char* key);
+	virtual bool Remove(const char* key, bool quiet = true);
 };
 

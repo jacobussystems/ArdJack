@@ -116,9 +116,9 @@ public:
 	virtual bool ScanInputs(bool* changes, int count, int delayMs);
 	virtual bool ScanInputsOnce(bool* changes);
 	//virtual bool Send(int oper, int partType, int index, char values[][ARDJACK_MAX_VALUE_LENGTH]);
-	virtual bool SendInventory(IoTMessage* request, bool includeZeroCounts = false);
+	virtual bool SendInventory(bool includeZeroCounts = false);
 	virtual bool SendNotification(Part* part);
-	virtual bool SendResponse(IoTMessage* request, int oper, const char* aName, const char* text, StringList* values = NULL);
+	virtual bool SendResponse(int oper, const char* aName, const char* text, StringList* values = NULL);
 	virtual bool SetNotify(Part* part, bool state);
 	virtual bool SetNotify(int partType, bool state);
 	virtual bool Update();

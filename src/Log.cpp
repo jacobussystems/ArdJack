@@ -412,10 +412,10 @@ void Log::WriteString(const char* caption, const char* text)
 	Write("'");
 	Write(text);
 	Write("', ");
-	Write(itoa(strlen(text), temp, 10));
+	Write(itoa(Utils::StringLen(text), temp, 10));
 	Write(" chars: ");
 
-	for (int i = 0; i < (int)strlen(text); i++)
+	for (int i = 0; i < Utils::StringLen(text); i++)
 	{
 		sprintf(temp, PRM("%02X "), text[i]);
 		Write(temp);

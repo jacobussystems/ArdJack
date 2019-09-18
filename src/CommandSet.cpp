@@ -90,24 +90,31 @@ CommandSet::CommandSet()
 	AddCommand(PRM("DEVICE"), &CommandSet::command_device);
 	AddCommand(PRM("DISPLAY"), &CommandSet::command_display);
 	AddCommand(PRM("EXIT"), &CommandSet::command_exit);
+
 #ifdef ARDJACK_INCLUDE_PERSISTENCE
 	AddCommand(PRM("FILE"), &CommandSet::command_file);
 #endif
+
 	AddCommand(PRM("HELP"), &CommandSet::command_help);
+
 #ifdef ARDJACK_NETWORK_AVAILABLE
 	AddCommand(PRM("NET"), &CommandSet::command_net);
 #endif
+
 	//AddCommand(PRM("PING"), &CommandSet::command_nyi);							//&command_ping);
 	AddCommand(PRM("REPEAT"), &CommandSet::command_repeat);
 	AddCommand(PRM("RESET"), &CommandSet::command_reset);
+
 #ifdef ARDJACK_INCLUDE_PERSISTENCE
 	AddCommand(PRM("RESTORE"), &CommandSet::command_restore);
 	AddCommand(PRM("SAVE"), &CommandSet::command_save);
 #endif
+
 	AddCommand(PRM("SEND"), &CommandSet::command_send);
 	AddCommand(PRM("SET"), &CommandSet::command_set);
-#ifdef ARDJACK_INCLUDE_TESTS
 	AddCommand(PRM("TEST"), &CommandSet::command_test);
+
+#ifdef ARDJACK_INCLUDE_TESTS
 	AddCommand(PRM("TESTS"), &CommandSet::command_tests);
 #endif
 }
@@ -192,7 +199,7 @@ bool CommandSet::Handle(const char* line, const char* verb, const char* remainde
 bool CommandSet::command_activate(const char* args)
 {
 	// Activate zero or more 'IoTObjects'.
-	if ((NULL == args) || (strlen(args) == 0))
+	if (Utils::StringIsNullOrEmpty(args))
 	{
 		Log::LogWarning(PRM("ACTIVATE command: No arguments"));
 		return true;
@@ -205,7 +212,7 @@ bool CommandSet::command_activate(const char* args)
 bool CommandSet::command_add(const char* args)
 {
 	// Add an 'IoTObject'.
-	if ((NULL == args) || (strlen(args) == 0))
+	if (Utils::StringIsNullOrEmpty(args))
 	{
 		Log::LogWarning(PRM("ADD command: No arguments"));
 		return true;
@@ -255,7 +262,7 @@ bool CommandSet::command_configure(const char* args)
 	//		'configure ard.button0 name=value'
 	//		'configure udp0 inputport=2390'
 
-	if ((NULL == args) || (strlen(args) == 0))
+	if (Utils::StringIsNullOrEmpty(args))
 	{
 		Log::LogWarning(PRM("CONFIGURE command: No arguments"));
 		return true;
@@ -310,7 +317,7 @@ bool CommandSet::command_configure(const char* args)
 
 bool CommandSet::command_connection(const char* args)
 {
-	if ((NULL == args) || (strlen(args) == 0))
+	if (Utils::StringIsNullOrEmpty(args))
 	{
 		Log::LogWarning(PRM("CONNECTION command: No arguments"));
 		return true;
@@ -323,7 +330,7 @@ bool CommandSet::command_connection(const char* args)
 bool CommandSet::command_deactivate(const char* args)
 {
 	// Deactivate zero or more 'IoTObjects'.
-	if ((NULL == args) || (strlen(args) == 0))
+	if (Utils::StringIsNullOrEmpty(args))
 	{
 		Log::LogWarning(PRM("DEACTIVATE command: No arguments"));
 		return true;
@@ -336,7 +343,7 @@ bool CommandSet::command_deactivate(const char* args)
 bool CommandSet::command_define(const char* args)
 {
 	// Define a Macro.
-	if ((NULL == args) || (strlen(args) == 0))
+	if (Utils::StringIsNullOrEmpty(args))
 	{
 		Log::LogWarning(PRM("DEFINE command: No arguments"));
 		return true;
@@ -347,7 +354,7 @@ bool CommandSet::command_define(const char* args)
 
 	Utils::GetArgs(args, name, &content);
 
-	if (strlen(content) == 0)
+	if (Utils::StringIsNullOrEmpty(content))
 		Globals::Interpreter->RemoveMacro(name);
 	else
 		Globals::Interpreter->AddMacro(name, content);
@@ -375,7 +382,7 @@ bool CommandSet::command_delay(const char* args)
 bool CommandSet::command_delete(const char* args)
 {
 	// Delete zero or more 'IoTObjects'.
-	if ((NULL == args) || (strlen(args) == 0))
+	if (Utils::StringIsNullOrEmpty(args))
 	{
 		Log::LogWarning(PRM("DELETE command: No arguments"));
 		return true;
@@ -387,7 +394,7 @@ bool CommandSet::command_delete(const char* args)
 
 bool CommandSet::command_device(const char* args)
 {
-	if ((NULL == args) || (strlen(args) == 0))
+	if (Utils::StringIsNullOrEmpty(args))
 	{
 		Log::LogWarning(PRM("DEVICE command: No arguments"));
 		return true;
@@ -429,7 +436,7 @@ bool CommandSet::command_file(const char* args)
 	// file list								list the current files
 	// file scan								scan the flash storage (Arduino) / disk folder (Windows)
 
-	if ((NULL == args) || (strlen(args) == 0))
+	if (Utils::StringIsNullOrEmpty(args))
 	{
 		Log::LogWarning(PRM("FILE command: No arguments"));
 		return true;
@@ -564,7 +571,7 @@ bool CommandSet::command_help(const char* args)
 
 bool CommandSet::command_net(const char* args)
 {
-	if ((NULL == args) || (strlen(args) == 0))
+	if (Utils::StringIsNullOrEmpty(args))
 	{
 		Log::LogWarning(PRM("NET command: No arguments"));
 		return true;
@@ -585,7 +592,7 @@ bool CommandSet::command_nyi(const char* args)
 
 bool CommandSet::command_repeat(const char* args)
 {
-	if ((NULL == args) || (strlen(args) == 0))
+	if (Utils::StringIsNullOrEmpty(args))
 	{
 		Log::LogWarning(PRM("REPEAT command: No arguments"));
 		return true;
@@ -650,7 +657,7 @@ bool CommandSet::command_send(const char* args)
 	// Syntax:
 	//		send conn "text"
 
-	if ((NULL == args) || (strlen(args) == 0))
+	if (Utils::StringIsNullOrEmpty(args))
 	{
 		Log::LogWarning(PRM("SEND command: No arguments"));
 		return true;
@@ -679,7 +686,7 @@ bool CommandSet::command_send(const char* args)
 
 bool CommandSet::command_set(const char* args)
 {
-	if ((NULL == args) || (strlen(args) == 0))
+	if (Utils::StringIsNullOrEmpty(args))
 	{
 		Log::LogWarning(PRM("SET command: No arguments"));
 		return true;
@@ -704,7 +711,7 @@ bool CommandSet::command_set(const char* args)
 
 bool CommandSet::command_test(const char* args)
 	{
-		if ((NULL == args) || (strlen(args) == 0))
+		if (Utils::StringIsNullOrEmpty(args))
 		{
 			Log::LogWarning(PRM("TEST command: No arguments"));
 			return true;
@@ -751,6 +758,33 @@ bool CommandSet::command_test(const char* args)
 
 		return true;
 	}
+
+#else
+
+bool CommandSet::command_test(const char* args)
+{
+	Log::LogInfoF(PRM("Entry"));
+	int save = Globals::Verbosity;
+	Globals::Verbosity = 10;
+
+	StringList* sl1 = new StringList();
+
+	for (int i = 0; i < 3; i++)
+	{
+		StringList* sl2 = new StringList();
+		delete sl2;
+
+		StringList* sl3 = new StringList();
+		delete sl3;
+	}
+
+	delete sl1;
+
+	Globals::Verbosity = save;
+	Log::LogInfoF(PRM("Exit"));
+
+	return true;
+}
 
 #endif
 

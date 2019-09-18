@@ -80,12 +80,12 @@ char Utils::Buffer_Int2String[];
 
 		if (milliseconds < 1000)
 		{
-			time->Milliseconds = milliseconds;
+			time->Milliseconds = (uint16_t)milliseconds;
 			return;
 		}
 
 		int seconds = milliseconds / 1000;
-		time->Milliseconds = milliseconds - seconds * 1000;
+		time->Milliseconds = (uint16_t)(milliseconds - seconds * 1000);
 
 		// Bump the seconds.
 		int newSeconds = time->Seconds + seconds;
@@ -166,7 +166,7 @@ char Utils::Buffer_Int2String[];
 
 	bool Utils::CanTrim(const char* text)
 	{
-		int count = strlen(text);
+		int count = Utils::StringLen(text);
 
 		if (count == 0)
 			return false;
@@ -393,7 +393,7 @@ char Utils::Buffer_Int2String[];
 			else
 			{
 				ptrResource++;
-				int nCopy = ptrResource - temp - 1;
+				int nCopy = (int)(ptrResource - temp - 1);
 				strncpy(computer, temp, nCopy);
 				computer[nCopy] = NULL;
 				Utils::Trim(computer);
@@ -675,7 +675,7 @@ char Utils::Buffer_Int2String[];
 		if (ptr > text)
 		{
 			// Copy the preceding part of 'text' to 'firstPart'.
-			int count = ptr - text;
+			int count = (int)(ptr - text);
 			strncpy(firstPart, text, count);
 			firstPart[count] = NULL;
 			Trim(firstPart);
@@ -778,7 +778,7 @@ char Utils::Buffer_Int2String[];
 				return true;
 			}
 
-			int index1 = next1 - pSrc - 1;
+			int index1 = (int)(next1 - pSrc - 1);
 			strncpy(result, pSrc + 1, index1);		// get the start of the string up to the double-quote
 			result[index1] = NULL;
 
@@ -806,7 +806,7 @@ char Utils::Buffer_Int2String[];
 				return true;
 			}
 
-			int index2 = next2 - pSrc - 1;
+			int index2 = (int)(next2 - pSrc - 1);
 			strncpy(result, pSrc + 1, index2);		// get the start of the string up to the single-quote
 			result[index2] = NULL;
 
@@ -833,7 +833,7 @@ char Utils::Buffer_Int2String[];
 				return true;
 			}
 
-			int index = first - pSrc;
+			int index = (int)(first - pSrc);
 
 			if (index == 0)
 				* result = NULL;
@@ -1294,7 +1294,7 @@ const char* Utils::Int2String(long value, int radix)
 			const char* ptr = strstr(shortMonthNamesUpper, temp);
 
 			if (NULL != ptr)
-				month = (ptr - shortMonthNamesUpper) / 3 + 1;
+				month = (int)((ptr - shortMonthNamesUpper) / 3 + 1);
 
 			strncpy(temp, text + 4, 2);
 			temp[2] = NULL;
@@ -1409,7 +1409,7 @@ const char* Utils::Int2String(long value, int radix)
 		int maxLength, bool trimFields)
 	{
 		// Split 'text'.
-		if ((NULL == text) || (strlen(text) == 0))
+		if (Utils::StringIsNullOrEmpty(text))
 			return 0;
 
 		char useText[300];
@@ -1456,7 +1456,7 @@ const char* Utils::Int2String(long value, int radix)
 			return false;
 
 		char temp[80];
-		sprintf(temp, PRM("Utils::String2Bool: Invalid '%s' (%d chars)"), text, (int)strlen(text));
+		sprintf(temp, PRM("Utils::String2Bool: Invalid '%s' (%d chars)"), text, Utils::StringLen(text));
 		Log::LogInfo(temp);
 
 		return defValue;
@@ -1508,7 +1508,7 @@ const char* Utils::Int2String(long value, int radix)
 	}
 
 
-	double Utils::String2Double(const char* text, float defValue)
+	double Utils::String2Double(const char* text, double defValue)
 	{
 		if (strlen(text) == 0)
 			return defValue;
@@ -1529,7 +1529,7 @@ const char* Utils::Int2String(long value, int radix)
 
 	float Utils::String2Float(const char* text, float defValue)
 	{
-		return String2Double(text, defValue);
+		return (float)String2Double(text, defValue);
 	}
 
 
@@ -1676,6 +1676,18 @@ const char* Utils::Int2String(long value, int radix)
 	}
 
 
+	bool Utils::StringIsNullOrEmpty(const char* text)
+	{
+		return (NULL == text) || (strlen(text) == 0);
+	}
+
+
+	int Utils::StringLen(const char* text)
+	{
+		return (int)strlen(text);
+	}
+
+
 	char* Utils::StringReplace(const char* source, const char* str1, const char* str2, bool ignoreCase, char* out, int size)
 	{
 		// Replace all occurrences of 'str1' in 'source' with 'str2', returning the result in 'out'.
@@ -1705,7 +1717,7 @@ const char* Utils::Int2String(long value, int radix)
 			// Copy any preceding text to 'temp'.
 			if (next > inptr)
 			{
-				int count = next - inptr;
+				int count = (int)(next - inptr);
 				strncpy(outptr, inptr, count);
 				outptr += count;
 				*outptr = NULL;
@@ -1753,7 +1765,7 @@ const char* Utils::Int2String(long value, int radix)
 			// Copy any preceding text to 'out'.
 			if (next > inptr)
 			{
-				int count = next - inptr;
+				int count = (int)(next - inptr);
 				strncpy(outptr, inptr, count);
 				outptr += count;
 				*outptr = NULL;

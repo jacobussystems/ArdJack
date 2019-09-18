@@ -327,7 +327,7 @@ bool Globals::CheckDeviceBuffer()
 	if (Globals::Verbosity > 7)
 		Log::LogInfo(PRM("CheckDeviceBuffer: Device '"), item.Dev->Name, "', '", item.Text, "'");
 
-	return Globals::HandleDeviceCommand(item.Dev, item.Text);
+	return Globals::HandleDeviceRequest(item.Dev, item.Text);
 }
 
 
@@ -388,28 +388,13 @@ bool Globals::DeleteSingleObject(IoTObject* obj)
 }
 
 
-bool Globals::HandleDeviceCommand(Device* dev, const char* line)
+bool Globals::HandleDeviceRequest(Device* dev, const char* line)
 {
 	// Create a request message to assist development.
 	if (Globals::Verbosity > 5)
-		Log::LogInfo(PRM("Globals::HandleDeviceCommand: "), dev->Name, ": '", line, "'");
+		Log::LogInfo(PRM("Globals::HandleDeviceRequest: "), dev->Name, ": '", line, "'");
 
-	IoTMessage msg;
-
-	// TEMPORARY: (for development)
-	msg.SetFromPath("\\\\DELL-9020\\rem0");
-
-	char temp[80];
-	strcpy(temp, "\\\\");
-	strcat(temp, Globals::ComputerName);
-#ifdef ARDUINO
-	strcat(temp, "\\ard");
-#else
-	strcat(temp, "\\win");
-#endif
-	msg.SetReturnPath(temp);
-
-	return DeviceMgr->HandleDeviceRequest(dev, line, &msg);
+	return DeviceMgr->HandleDeviceRequest(dev, line);
 }
 
 

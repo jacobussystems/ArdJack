@@ -436,7 +436,7 @@ bool UdpConnection::PollInputs(int maxCount)
 	// A UDP message has been received.
 	line[msglen] = NULL;
 
-	RxCount += strlen(line);
+	RxCount += Utils::StringLen(line);
 	RxEvents++;
 
 	CheckAnnounce(false, line);
@@ -466,13 +466,14 @@ bool UdpConnection::SendText(const char* text)
 	if (!_CanOutput)
 		return false;
 
-	if (sendto(_Talker, text, strlen(text), 0, (struct sockaddr *)&_OutputAddress, sizeof(_OutputAddress)) == SOCKET_ERROR)
+	if (sendto(_Talker, text, Utils::StringLen(text), 0, (struct sockaddr *)&_OutputAddress, sizeof(_OutputAddress))
+		== SOCKET_ERROR)
 	{
 		Log::LogErrorF(PRM("%s: UDP SendText failed, ERROR CODE: %d"), Name, WSAGetLastError());
 		return false;
 	}
 
-	TxCount += strlen(text);
+	TxCount += Utils::StringLen(text);
 	TxEvents++;
 
 	CheckAnnounce(true, text);
@@ -489,7 +490,8 @@ bool UdpConnection::SendTextQuiet(const char* text)
 	if (!_Active || !_CanOutput)
 		return false;
 
-	if (sendto(_Talker, text, strlen(text), 0, (struct sockaddr *)&_OutputAddress, sizeof(_OutputAddress)) == SOCKET_ERROR)
+	if (sendto(_Talker, text, Utils::StringLen(text), 0, (struct sockaddr *)&_OutputAddress, sizeof(_OutputAddress))
+		== SOCKET_ERROR)
 		return false;
 
 	return true;

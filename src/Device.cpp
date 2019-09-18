@@ -755,7 +755,7 @@ bool Device::Read(Part* part, Dynamic* value)
 
 		StringList itemValues;
 
-		for (int i = 0; i < part->ItemCount; i++)
+		for (int i = 0; i < part->Count; i++)
 		{
 			values->Put(i, "");
 
@@ -850,7 +850,7 @@ bool Device::ScanInputsOnce(bool *changes)
 }
 
 
-bool Device::SendInventory(IoTMessage* request, bool includeZeroCounts)
+bool Device::SendInventory(bool includeZeroCounts)
 {
 	char temp[10];
 
@@ -862,7 +862,7 @@ bool Device::SendInventory(IoTMessage* request, bool includeZeroCounts)
 		{
 			itoa(count, temp, 10);
 
-			if (!SendResponse(request, ARDJACK_OPERATION_GET_COUNT, PartManager::GetPartTypeName(partType), temp))
+			if (!SendResponse(ARDJACK_OPERATION_GET_COUNT, PartManager::GetPartTypeName(partType), temp))
 				return false;
 		}
 	}
@@ -877,11 +877,11 @@ bool Device::SendNotification(Part* part)
 	char temp[ARDJACK_MAX_DYNAMIC_STRING_LENGTH];
 	part->Value.AsString(temp);
 
-	return SendResponse(NULL, ARDJACK_OPERATION_CHANGED, part->Name, temp);
+	return SendResponse(ARDJACK_OPERATION_CHANGED, part->Name, temp);
 }
 
 
-bool Device::SendResponse(IoTMessage* request, int oper, const char* aName, const char* text, StringList* values)
+bool Device::SendResponse(int oper, const char* aName, const char* text, StringList* values)
 {
 	char response[120];
 
@@ -913,13 +913,11 @@ bool Device::SendResponse(IoTMessage* request, int oper, const char* aName, cons
 	char returnPath[ARDJACK_MAX_MESSAGE_PATH_LENGTH] = "";
 	char toPath[ARDJACK_MAX_MESSAGE_PATH_LENGTH] = "";
 
-	if (NULL != request)
-		strcpy(toPath, request->ReturnPath());
-	else
-		strcpy(toPath, _MessageToPath);
+	strcpy(toPath, _MessageToPath);
 
 	// TEMPORARY: ?
 	sprintf(fromPath, "\\\\%s\\%s", Globals::ComputerName, Name);
+	strcpy(fromPath, fromPath);
 	strcpy(returnPath, fromPath);
 
 	switch (_MessageFormat)
@@ -1034,7 +1032,7 @@ bool Device::Write(Part* part, Dynamic* value)
 
 		StringList itemValues;
 
-		for (int i = 0; i < part->ItemCount; i++)
+		for (int i = 0; i < part->Count; i++)
 		{
 			Part *item = part->Items[i];
 

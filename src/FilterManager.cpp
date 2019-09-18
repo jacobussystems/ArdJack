@@ -55,8 +55,9 @@ FilterManager::~FilterManager()
 bool FilterManager::Interact(const char* text)
 {
 	// E.g.
+	//		+++
 
-	if ((NULL == text) || (strlen(text) == 0))
+	if (Utils::StringIsNullOrEmpty(text))
 		return true;
 
 	StringList fields;

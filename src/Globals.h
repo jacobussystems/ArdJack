@@ -539,7 +539,7 @@ public:
 	static bool CheckDeviceBuffer();
 	static bool DeleteObject(const char* args);
 	static bool DeleteSingleObject(IoTObject* obj);
-	static bool HandleDeviceCommand(Device *dev, const char* line);
+	static bool HandleDeviceRequest(Device *dev, const char* line);
 	static bool Init();
 	static bool QueueCommand(const char* line);
 	static bool Set(const char* name, const char* value, bool* handled);

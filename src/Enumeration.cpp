@@ -36,7 +36,6 @@
 
 Enumeration::Enumeration(const char* name)
 {
-	ItemCount = 0;
 	strcpy(Name, name);
 }
 
@@ -61,8 +60,6 @@ bool Enumeration::Add(const char* name, int8_t value)
 	Names.Add(name);
 	Values.Add(value);
 
-	ItemCount++;
-
 	return true;
 }
 
@@ -71,13 +68,18 @@ void Enumeration::Clear()
 {
 	Names.Clear();
 	Values.Clear();
-	ItemCount = 0;
+}
+
+
+int Enumeration::Count()
+{
+	return Values.Count;
 }
 
 
 int8_t Enumeration::LookupName(const char* name, int8_t defaultValue, bool quiet)
 {
-	for (int i = 0; i < ItemCount; i++)
+	for (int i = 0; i < Values.Count; i++)
 	{
 		if (Utils::StringEquals(Names.Get(i), name))
 			return Values.Get(i);
@@ -93,7 +95,7 @@ int8_t Enumeration::LookupName(const char* name, int8_t defaultValue, bool quiet
 const char* Enumeration::LookupValue(int8_t value, const char* defaultName, bool quiet)
 {
 	// Returns the first matching item.
-	for (int i = 0; i < ItemCount; i++)
+	for (int i = 0; i < Values.Count; i++)
 	{
 		int8_t val = Values.Get(i);
 

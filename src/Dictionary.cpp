@@ -42,7 +42,6 @@
 Dictionary::Dictionary(bool ignoreCase)
 {
 	IgnoreCase = ignoreCase;
-	ItemCount = 0;
 }
 
 
@@ -66,7 +65,6 @@ bool Dictionary::Add(const char* key, const char* value)
 		// Add this key.
 		Keys.Add(key);
 		Values.Add(value);
-		ItemCount++;
 	}
 
 	return true;
@@ -79,27 +77,63 @@ bool Dictionary::ContainsKey(const char* key)
 }
 
 
-const char* Dictionary::Get(const char* key, char* value, int count)
+int Dictionary::Count()
 {
-	value[0] = NULL;
+	return Keys.Count;
+}
 
+
+const char* Dictionary::Get(const char* key)
+{
 	int index = Lookup(key);
 
-	if (index >= 0)
-		strcpy(value, Values.Get(index));
+	if (index < 0)
+		return NULL;
 
-	return value;
+	return Values.Get(index);
+}
+
+
+const char* Dictionary::Get(int index, char* key)
+{
+	if ((index < 0) || (index > Keys.Count))
+	{
+		Log::LogErrorF(PRM("Get: Invalid index: %d (count %d)"), index, Keys.Count);
+		return NULL;
+	}
+
+	strcpy(key, Keys.Get(index));
+
+	return Values.Get(index);
 }
 
 
 int Dictionary::Lookup(const char* key)
 {
-	for (int i = 0; i < ItemCount; i++)
+	for (int i = 0; i < Keys.Count; i++)
 	{
 		if (Utils::StringEquals(key, Keys.Get(i), IgnoreCase))
 			return i;
 	}
 
 	return -1;
+}
+
+
+bool Dictionary::Remove(const char* key, bool quiet)
+{
+	int index = Lookup(key);
+
+	if (index < 0)
+	{
+		if (!quiet)
+			Log::LogWarningF(PRM("Remove: No such key: '%s'"), key);
+		return true;
+	}
+
+	Keys.Remove(index);
+	Values.Remove(index);
+
+	return true;
 }
 

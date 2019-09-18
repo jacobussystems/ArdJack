@@ -101,6 +101,7 @@
     <ClInclude Include="ArrayHelpers.h" />
     <ClInclude Include="Beacon.h" />
     <ClInclude Include="BeaconManager.h" />
+    <ClInclude Include="ConfigProp.h" />
     <ClInclude Include="Filter.h" />
     <ClInclude Include="Dynamic.h" />
     <ClInclude Include="FilterManager.h" />
@@ -108,7 +109,6 @@
     <ClInclude Include="IoTClock.h" />
     <ClInclude Include="CmdInterpreter.h" />
     <ClInclude Include="CommandSet.h" />
-    <ClInclude Include="ConfigItem.h" />
     <ClInclude Include="Configuration.h" />
     <ClInclude Include="Connection.h" />
     <ClInclude Include="ConnectionManager.h" />
@@ -172,6 +172,7 @@
     <ClCompile Include="ArrayHelpers.cpp" />
     <ClCompile Include="Beacon.cpp" />
     <ClCompile Include="BeaconManager.cpp" />
+    <ClCompile Include="ConfigProp.cpp" />
     <ClCompile Include="Filter.cpp" />
     <ClCompile Include="DateTime.cpp" />
     <ClCompile Include="Dynamic.cpp" />
@@ -217,7 +218,6 @@
     <ClCompile Include="Route.cpp" />
     <ClCompile Include="RtcClock.cpp" />
     <ClCompile Include="SerialConnection.cpp" />
-    <ClCompile Include="ConfigItem.cpp" />
     <ClCompile Include="Shield.cpp" />
     <ClCompile Include="ShieldManager.cpp" />
     <ClCompile Include="ArduinoClock.cpp" />

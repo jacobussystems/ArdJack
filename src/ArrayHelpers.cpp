@@ -52,7 +52,7 @@ long ArrayHelpers::HeapUsed()
 	while ((rc = _heapwalk(&info)) == _HEAPOK)
 	{
 		if (info._useflag == _USEDENTRY)
-			used += info._size;
+			used += (long)info._size;
 	}
 
 	if ((rc != _HEAPEND) && (rc != _HEAPEMPTY))
