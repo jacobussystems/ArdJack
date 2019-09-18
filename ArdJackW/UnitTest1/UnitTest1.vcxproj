@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{01A962D9-65F3-4E5E-996F-2AD60528CF8C}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>UnitTest1</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectSubType>NativeUnitTestProject</ProjectSubType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\DEV\IoTJack\Clients\Windows\ArdJackW;D:\DEV\IoTJack\Clients\Arduino\ArdJack;$(IncludePath)</IncludePath>
+    <SourcePath>D:\DEV\IoTJack\Clients\Arduino\ArdJack;D:\DEV\IoTJack\Clients\Windows\ArdJackW;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\DEV\IoTJack\Clients\Arduino\ArdJack;D:\DEV\IoTJack\Clients\Windows\ArdJackW;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;INCLUDE_NETWORKING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UseFullPaths>true</UseFullPaths>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UseFullPaths>true</UseFullPaths>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UseFullPaths>true</UseFullPaths>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UseFullPaths>true</UseFullPaths>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Arduino\ArdJack\ArrayHelpers.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Beacon.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\BeaconManager.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Bridge.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\BridgeManager.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\CmdInterpreter.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\CommandSet.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\ConfigProp.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Configuration.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Connection.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\ConnectionManager.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\cppQueue.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\DataLogger.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\DataLoggerManager.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\DateTime.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Device.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\DeviceCodec1.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\DeviceManager.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Dictionary.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Displayer.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Dynamic.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Enumeration.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\FieldReplacer.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\FifoBuffer.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Filter.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\FilterManager.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Globals.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\HttpConnection.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\IniFiler.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Int8List.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\IoTClock.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\IoTManager.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\IoTMessage.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\IoTObject.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Log.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\LogConnection.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\MessageFilter.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\MessageFilterItem.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\NetworkInterface.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\NetworkManager.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Part.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\PartManager.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\PersistentFile.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\PersistentFileManager.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Register.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Route.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\SerialConnection.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Shield.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\ShieldManager.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\StringList.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Table.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\TcpConnection.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Tests.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\ThinkerShield.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\UdpConnection.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\UrlEncoder.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\UserPart.cpp" />
+    <ClCompile Include="..\..\Arduino\ArdJack\Utils.cpp" />
+    <ClCompile Include="..\ArdJackW\ClipboardConnection.cpp" />
+    <ClCompile Include="..\ArdJackW\RingBuf.cpp" />
+    <ClCompile Include="..\ArdJackW\VellemanK8055Device.cpp" />
+    <ClCompile Include="..\ArdJackW\WinClock.cpp" />
+    <ClCompile Include="..\ArdJackW\WinDevice.cpp" />
+    <ClCompile Include="..\ArdJackW\WinDisk.cpp" />
+    <ClCompile Include="..\ArdJackW\WinMemory.cpp" />
+    <ClCompile Include="TestBase.cpp" />
+    <ClCompile Include="Test_ArrayHelpers.cpp" />
+    <ClCompile Include="Test_DateTime.cpp" />
+    <ClCompile Include="Test_Dynamic.cpp" />
+    <ClCompile Include="Test_FieldReplacer.cpp" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Test_Dictionary.cpp" />
+    <ClCompile Include="Test_Enumeration.cpp" />
+    <ClCompile Include="Test_StringList2.cpp" />
+    <ClCompile Include="Test_UrlEncoder.cpp" />
+    <ClCompile Include="Test_Utils_SplitText2Array.cpp" />
+    <ClCompile Include="Test_Utils_SplitText.cpp" />
+    <ClCompile Include="Test_Utils_Strings.cpp" />
+    <ClCompile Include="Test_Utils_Time.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Arduino\ArdJack\ArrayHelpers.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Beacon.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\BeaconManager.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Bridge.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\BridgeManager.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\CmdInterpreter.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\CommandSet.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\ConfigProp.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Configuration.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Connection.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\ConnectionManager.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\cppQueue.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\DataLogger.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\DataLoggerManager.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\DateTime.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Device.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\DeviceCodec1.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\DeviceManager.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Dictionary.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Displayer.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Dynamic.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Enumeration.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\FieldReplacer.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\FifoBuffer.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Filter.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\FilterManager.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Globals.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\HttpConnection.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\IniFiler.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Int8List.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\IoTClock.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\IoTManager.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\IoTMessage.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\IoTObject.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Log.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\LogConnection.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\MessageFilter.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\MessageFilterItem.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\NetworkInterface.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\NetworkManager.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Part.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\PartManager.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\PersistentFile.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\PersistentFileManager.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Register.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Route.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\SerialConnection.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Shield.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\ShieldManager.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\StringList.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Table.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\TcpConnection.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Tests.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\ThinkerShield.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\UdpConnection.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\UrlEncoder.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\UserPart.h" />
+    <ClInclude Include="..\..\Arduino\ArdJack\Utils.h" />
+    <ClInclude Include="..\ArdJackW\ClipboardConnection.h" />
+    <ClInclude Include="..\ArdJackW\RingBuf.h" />
+    <ClInclude Include="..\ArdJackW\VellemanK8055Device.h" />
+    <ClInclude Include="..\ArdJackW\WinClock.h" />
+    <ClInclude Include="..\ArdJackW\WinDevice.h" />
+    <ClInclude Include="..\ArdJackW\WinDisk.h" />
+    <ClInclude Include="..\ArdJackW\WinMemory.h" />
+    <ClInclude Include="pch.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

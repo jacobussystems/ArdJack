@@ -214,7 +214,7 @@ bool DataLogger::Sample()
 
 	if (strlen(_Prefix) > 0)
 	{
-		// Apply any replacements in 'text'.
+		// Apply any replacements in '_Prefix', e.g. '[date]' or '[time]'.
 		_FieldReplacer->ReplaceFields(_Prefix, NULL, &FieldReplacer_ReplaceField, line);
 		strcat(line, " ");
 	}

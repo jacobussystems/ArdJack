@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArdJackW", "ArdJackW.vcxproj", "{8024D81F-F742-492A-ACE5-ED596F17A3F1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F568F064-CEF5-4CE0-A3C5-360A2279744B}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\Applications\INFO\INFO.txt = ..\..\..\Applications\INFO\INFO.txt
+		C:\Users\Jim\Documents\Jacobus Systems\ArdJackW\ArdJackW.ini = C:\Users\Jim\Documents\Jacobus Systems\ArdJackW\ArdJackW.ini
+		C:\Users\Jim\Documents\Jacobus Systems\ArdJackW\ArdJackW.startup = C:\Users\Jim\Documents\Jacobus Systems\ArdJackW\ArdJackW.startup
+		..\..\..\Applications\INFO\TODO - ArdJack.txt = ..\..\..\Applications\INFO\TODO - ArdJack.txt
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest1", "..\UnitTest1\UnitTest1.vcxproj", "{01A962D9-65F3-4E5E-996F-2AD60528CF8C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8024D81F-F742-492A-ACE5-ED596F17A3F1} = {8024D81F-F742-492A-ACE5-ED596F17A3F1}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8024D81F-F742-492A-ACE5-ED596F17A3F1}.Debug|x64.ActiveCfg = Debug|x64
+		{8024D81F-F742-492A-ACE5-ED596F17A3F1}.Debug|x64.Build.0 = Debug|x64
+		{8024D81F-F742-492A-ACE5-ED596F17A3F1}.Debug|x86.ActiveCfg = Debug|Win32
+		{8024D81F-F742-492A-ACE5-ED596F17A3F1}.Debug|x86.Build.0 = Debug|Win32
+		{8024D81F-F742-492A-ACE5-ED596F17A3F1}.Release|x64.ActiveCfg = Debug|x64
+		{8024D81F-F742-492A-ACE5-ED596F17A3F1}.Release|x64.Build.0 = Debug|x64
+		{8024D81F-F742-492A-ACE5-ED596F17A3F1}.Release|x86.ActiveCfg = Release|Win32
+		{8024D81F-F742-492A-ACE5-ED596F17A3F1}.Release|x86.Build.0 = Release|Win32
+		{01A962D9-65F3-4E5E-996F-2AD60528CF8C}.Debug|x64.ActiveCfg = Debug|x64
+		{01A962D9-65F3-4E5E-996F-2AD60528CF8C}.Debug|x64.Build.0 = Debug|x64
+		{01A962D9-65F3-4E5E-996F-2AD60528CF8C}.Debug|x86.ActiveCfg = Debug|Win32
+		{01A962D9-65F3-4E5E-996F-2AD60528CF8C}.Debug|x86.Build.0 = Debug|Win32
+		{01A962D9-65F3-4E5E-996F-2AD60528CF8C}.Release|x64.ActiveCfg = Release|x64
+		{01A962D9-65F3-4E5E-996F-2AD60528CF8C}.Release|x64.Build.0 = Release|x64
+		{01A962D9-65F3-4E5E-996F-2AD60528CF8C}.Release|x86.ActiveCfg = Release|Win32
+		{01A962D9-65F3-4E5E-996F-2AD60528CF8C}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5D193D16-547C-4282-AF3F-E9B1F9F1DACA}
+	EndGlobalSection
+EndGlobal
