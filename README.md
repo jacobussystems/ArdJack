@@ -40,6 +40,6 @@ The code is developed using Visual Studio 2019 with Visual Micro.
 
 ArdJackW is a Windows console application based on ArdJack, also developed in Visual Studio 2019.
 
-The source files are in [[src]], and there is an associated Unit Test project in subfolder `UnitTest1`.
+The source files are in the [[src|src]] folder, and there is an associated Unit Test project in subfolder `UnitTest1`.
 
 
