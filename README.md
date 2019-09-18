@@ -47,3 +47,4 @@ ArdJackW is a Windows console application based on ArdJack, and also developed i
 
 The source files are in the `ArdJackW/src` folder, and there is an associated Unit Test project in the `ArdJackW/UnitTest1` folder.
 
+See the `ArdJackW` Wiki entry for more detail.
