@@ -128,10 +128,6 @@ bool CmdInterpreter::ExecuteCommand(const char* line)
 	if (Utils::StringStartsWith(line, Globals::CommentPrefix))
 		return true;
 
-	// Special case.
-	if (Utils::StringEquals(line, "mem"))
-		return Displayer::DisplayItem("memory");
-
 	if (Globals::Verbosity > 2)
 		Log::LogInfo(PRM("Command: '"), line, "'");
 

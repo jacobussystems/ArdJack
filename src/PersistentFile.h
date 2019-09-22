@@ -25,18 +25,24 @@
 
 #pragma once
 
-#include "Globals.h"
-
 #ifdef ARDUINO
 	#include <arduino.h>
 	#include "DetectBoard.h"
 
-	#ifdef ARDJACK_FLASH_AVAILABLE
-		#include <FlashStorage.h>
-	#endif
+	#include "FlashLibrary.h"
+
+	//#ifdef ARDJACK_FLASH_AVAILABLE
+	//	#ifdef ARDJACK_ARDUINO_DUE
+	//		#include <FlashAsEEPROM.h>
+	//	#else
+	//		#include <FlashStorage.h>
+	//	#endif
+	//#endif
 #else
 	//#include "WProgram.h"
 #endif
+
+#include "Globals.h"
 
 
 #ifdef ARDJACK_INCLUDE_PERSISTENCE

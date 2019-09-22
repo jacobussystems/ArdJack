@@ -25,8 +25,6 @@
 
 #pragma once
 
-#include "pch.h"
-
 #ifdef ARDUINO
 	#define _strlwr strlwr
 #else

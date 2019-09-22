@@ -28,13 +28,16 @@
 
 #ifdef ARDUINO
 
+#include "DetectBoard.h"
+#include "Globals.h"
+
+
 #ifdef ARDJACK_ETHERNET_AVAILABLE
 
 #include <arduino.h>
 
 #include <Ethernet.h>
 
-#include "DetectBoard.h"
 #include "IoTObject.h"
 #include "NetworkInterface.h"
 

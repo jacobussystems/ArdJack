@@ -25,6 +25,10 @@
 
 #include "pch.h"
 
+#ifdef ARDUINO
+	#include "DetectBoard.h"
+#endif
+
 #include "Globals.h"
 
 
@@ -32,7 +36,11 @@
 
 #ifdef ARDUINO
 	#ifdef ARDJACK_FLASH_AVAILABLE
-		#include <FlashStorage.h>
+		#ifdef ARDJACK_ARDUINO_DUE
+			#include <FlashAsEEPROM.h>
+		#else
+			#include <FlashStorage.h>
+		#endif
 	#endif
 #else
 	#include <stdio.h>

@@ -27,6 +27,7 @@
 
 #ifdef ARDUINO
 	#include <arduino.h>
+
 	#include "DetectBoard.h"
 
 	#ifdef ARDJACK_ETHERNET_AVAILABLE
@@ -35,8 +36,8 @@
 	#endif
 
 	#ifdef ARDJACK_WIFI_AVAILABLE
+		#include "WiFiLibrary.h"
 		#include <WiFiUdp.h>
-		//#include "WiFiLibrary.h"
 	#endif
 #else
 	#include "stdafx.h"

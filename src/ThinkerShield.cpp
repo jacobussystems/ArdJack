@@ -81,7 +81,7 @@ bool ThinkerShield::CreateInventory()
 
 	// LEDs.
 	// Correct?
-	Owner->AddPart("led0", ARDJACK_PART_TYPE_LED, 5, LED_BUILTIN);
+	//Owner->AddPart("led0", ARDJACK_PART_TYPE_LED, 5, LED_BUILTIN);
 	Owner->AddParts("led", 5, ARDJACK_PART_TYPE_LED, 0, 1, 8);
 
 	// Light Sensor inputs.

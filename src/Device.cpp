@@ -37,6 +37,7 @@
 #include "DeviceCodec1.h"
 #include "Dictionary.h"
 #include "Dynamic.h"
+#include "Enumeration.h"
 #include "FieldReplacer.h"
 #include "Globals.h"
 #include "IoTMessage.h"
@@ -44,6 +45,7 @@
 #include "Log.h"
 #include "Part.h"
 #include "PartManager.h"
+#include "Route.h"
 #include "Shield.h"
 #include "ShieldManager.h"
 #include "StringList.h"
@@ -548,6 +550,109 @@ int Device::GetCount(int partType)
 }
 
 
+bool Device::GetParts(const char* expr, Part* parts[], uint8_t* count, bool quiet)
+{
+	// 'expr' is one of:
+	//		A special case like "ALL", "*", "AllIn", etc.
+	//		A Part's name.
+	//		A Part type.
+	// Populate 'parts' with the corresponding Part(s), and 'count' with the count.
+
+	*count = 0;
+
+	// Special case?
+	char useExpr[20];
+	strncpy(useExpr, expr, 20);
+	useExpr[strlen(expr)] = NULL;
+	Utils::Trim(useExpr);
+	strlwr(useExpr);
+
+	if (Utils::StringEquals(useExpr, "all", false) || Utils::StringEquals(useExpr, "*", false))
+	{
+		for (int i = 0; i < PartCount; i++)
+			parts[(*count)++] = Parts[i];
+
+		return true;
+	}
+
+	if (Utils::StringEquals(useExpr, "allin", false))
+	{
+		for (int i = 0; i < PartCount; i++)
+		{
+			Part* part = Parts[i];
+
+			if (Globals::PartMgr->IsInputType(part->Type))
+				parts[(*count)++] = part;
+		}
+
+		return true;
+	}
+
+	if (Utils::StringEquals(useExpr, "allanalog", false))
+	{
+		for (int i = 0; i < PartCount; i++)
+		{
+			Part* part = Parts[i];
+
+			if (Globals::PartMgr->IsAnalogType(part->Type))
+				parts[(*count)++] = part;
+		}
+
+		return true;
+	}
+
+	if (Utils::StringEquals(useExpr, "alldigital", false))
+	{
+		for (int i = 0; i < PartCount; i++)
+		{
+			Part* part = Parts[i];
+
+			if (Globals::PartMgr->IsDigitalType(part->Type))
+				parts[(*count)++] = part;
+		}
+
+		return true;
+	}
+
+	// Part name?
+	Part* part = LookupPart(useExpr, true);
+
+	if (NULL != part)
+	{
+		parts[(*count)++] = part;
+		return true;
+	}
+
+	// Part type?
+	int partType = Globals::PartMgr->LookupType(useExpr);
+
+	if (partType != ARDJACK_PART_TYPE_NONE)
+		return GetPartsOfType(partType, parts, count);
+
+	if (!quiet)
+		Log::LogErrorF(PRM("GetParts: Expression '%s' returned no Parts"), expr);
+
+	return true;
+}
+
+
+bool Device::GetPartsOfType(int partType, Part* parts[], uint8_t* count)
+{
+	// From 'partType', populate 'parts' with the Parts of that type, and 'count' with the count.
+	*count = 0;
+
+	for (int i = 0; i < PartCount; i++)
+	{
+		Part* part = Parts[i];
+
+		if (part->Type == partType)
+			parts[(*count)++] = part;
+	}
+
+	return true;
+}
+
+
 int Device::LookupOperation(const char* name)
 {
 	char useName[ARDJACK_MAX_NAME_LENGTH];
@@ -632,7 +737,7 @@ Part* Device::LookupPart(const char* name, bool quiet)
 
 bool Device::LookupParts(const char* names, Part* parts[], uint8_t* count)
 {
-	// From a space-separated lst of part names in 'names', pupulate 'parts' with the Parts, and 'count' with the count.
+	// From a space-separated lst of part names in 'names', populate 'parts' with the Parts, and 'count' with the count.
 	*count = 0;
 	StringList fields;
 
@@ -852,7 +957,7 @@ bool Device::ScanInputsOnce(bool *changes)
 
 bool Device::SendInventory(bool includeZeroCounts)
 {
-	char temp[10];
+	char temp[200];
 
 	for (int partType = ARDJACK_MIN_PART_TYPE; partType <= ARDJACK_MAX_PART_TYPE; partType++)
 	{
@@ -861,6 +966,17 @@ bool Device::SendInventory(bool includeZeroCounts)
 		if ((count > 0) || includeZeroCounts)
 		{
 			itoa(count, temp, 10);
+
+			for (int i = 0; i < PartCount; i++)
+			{
+				Part* part = Parts[i];
+
+				if (part->Type == partType)
+				{
+					strcat(temp, " ");
+					strcat(temp, part->Name);
+				}
+			}
 
 			if (!SendResponse(ARDJACK_OPERATION_GET_COUNT, PartManager::GetPartTypeName(partType), temp))
 				return false;
@@ -945,7 +1061,7 @@ bool Device::SetNotify(Part* part, bool state)
 	// If 'state', send notifications when 'part' changes value.
 	part->Notify = state;
 
-	if (Globals::Verbosity > 2)
+	if (Globals::Verbosity > 3)
 		Log::LogInfoF(PRM("SetNotify: '%s', Part '%s' -> state %d"), Name, part->Name, state);
 
 	return true;

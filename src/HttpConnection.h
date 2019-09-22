@@ -32,17 +32,8 @@ const static int HTTP_METHOD_POST = 1;
 
 #ifdef ARDUINO
 	#include <arduino.h>
+
 	#include "DetectBoard.h"
-
-	#ifdef ARDJACK_ETHERNET_AVAILABLE
-		//#include <Ethernet.h>
-	#endif
-
-	#ifdef ARDJACK_WIFI_AVAILABLE
-		//#include "WiFiLibrary.h"
-	#endif
-#else
-	//#include "WProgram.h"
 #endif
 
 #include "TcpConnection.h"

@@ -26,6 +26,10 @@
 
 #include "pch.h"
 
+//-----------------------------------------------------
+// SEE IMPORTANT NOTE re. WiFi includes further down.
+//-----------------------------------------------------
+
 
 // ARDUINO ONLY.
 
@@ -44,12 +48,8 @@
 #endif
 
 #ifdef ARDJACK_ETHERNET_AVAILABLE
-	//#include <SPI.h>
+	#include <SPI.h>
 	#include <Ethernet.h>
-#endif
-
-#ifdef ARDJACK_FLASH_AVAILABLE
-	#include <FlashStorage.h>
 #endif
 
 #ifdef ARDJACK_RTC_AVAILABLE
@@ -73,20 +73,38 @@
 #include "Route.h"
 #include "SerialConnection.h"
 #include "ShieldManager.h"
+
 #ifdef ARDJACK_INCLUDE_TESTS
   #include "Tests.h"
 #endif
-#include "UdpConnection.h"
+
+//#include "UdpConnection.h"
 #include "Utils.h"
 
 #ifdef ARDJACK_FLASH_AVAILABLE
 	#include "PersistentFileManager.h"
 #endif
 
-#ifdef ARDJACK_WIFI_AVAILABLE
-#include "WiFiLibrary.h"
-#include "WiFiInterface.h"
-#endif
+
+//--------------------------------------------------------------------------------------------------------------------------
+// IMPORTANT:
+//--------------------------------------------------------------------------------------------------------------------------
+
+// FOR VISUAL STUDIO + VISUAL MICRO, YOU NEED TO COMMENT/UNCOMMENT THE FOLLOWING THREE #includes TO MATCH THE BOARD IN USE.
+// Tried using the ArdJack conditionals, but weird errors when compiling in Visual Studio + Visual Micro.
+//		- Comment all 3 #includes for Arduino Due.
+//		- Repeat this in WiFiLibrary.h
+
+// MKR1010 etc.
+#include <WiFiNINA.h>
+
+// ESP32 boards.
+//#include <WiFi.h>
+
+// Other boards with WiFi.
+//#include <WiFi101.h>
+
+//--------------------------------------------------------------------------------------------------------------------------
 
 
 // Global data.
@@ -112,7 +130,7 @@ bool StartupCommands();
 	{
 		Globals::InitialisedStatic = true;
 
-		if (!SetupSerial(Globals::SerialSpeed))
+		if (!SetupSerial(115200))
 			return;
 
 		void* ptr = malloc(2);
@@ -124,7 +142,7 @@ bool StartupCommands();
 		Globals::Verbosity = 4;
 
 		// TEMPORARY: for development
-		Globals::Verbosity = 8;
+		//Globals::Verbosity = 8;
 		Log::IncludeMemory = true;
 
 		Globals::Init();
@@ -326,12 +344,8 @@ bool StartupCommands();
 	bool SetupSerial(int speed)
 	{
 		SERIAL_PORT_MONITOR.begin(speed);
+
 		Globals::SerialSpeed = speed;
-
-#if defined(ARDJACK_ARDUINO_DUE)
-		//SERIAL_PORT_MONITOR.begin(115200);
-#endif
-
 		Utils::DelayMs(1000);
 
 		SERIAL_PORT_MONITOR.println(PRM("Serial OK"));

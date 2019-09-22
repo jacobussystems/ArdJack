@@ -276,15 +276,17 @@ bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int op
 
 	case ARDJACK_OPERATION_SUBSCRIBE:
 	{
-		// e.g. device ard subscribe di0
-		// e.g. device ard subscribe di
+		// Subscribe to (send notifications re.) a Part or Part type, e.g.
+		//		device ard subscribe di0
+		//		device ard subscribe di
 		return SubscribePart(dev, aName, true);
 	}
 
 	case ARDJACK_OPERATION_UNSUBSCRIBE:
 	{
-		// e.g. device ard unsubscribe di0
-		// e.g. device ard unsubscribe di
+		// Unsubscribe from (don't send notifications re.) a Part or Part type, e.g.
+		//		device ard unsubscribe di0
+		//		device ard unsubscribe di
 		return SubscribePart(dev, aName, false);
 	}
 
@@ -529,49 +531,21 @@ int DeviceManager::LookupSubtype(const char* name)
 
 bool DeviceManager::SubscribePart(Device* dev, char* aName, bool newState)
 {
-	// 'aName' can be a PART name, a PART TYPE name, or "ALL" / "*".
-	if (Utils::StringEquals(aName, "all") || Utils::StringEquals(aName, "*"))
+	// 'aName' can be a PART name, a PART TYPE name, or "ALL" / "*" / "ALLIN".
+	Part* parts[ARDJACK_MAX_PARTS];
+	uint8_t count;
+
+	if (!dev->GetParts(aName, parts, &count))
+		return false;
+
+	// Subscribe/unsubscribe all Parts.
+	for (int i = 0; i < count; i++)
 	{
-		// Subscribe/unsubscribe all Parts.
-		for (int i = 0; i < dev->PartCount; i++)
-		{
-			Part* part = dev->Parts[i];
+		Part* part = parts[i];
 
-			// Only subscribe if the Part's an input.
-			if (part->IsInput())
-				dev->SetNotify(part, newState);
-		}
-	}
-	else
-	{
-		// Part name or Part type name?
-		Part* part = dev->LookupPart(aName, true);
-
-		if (NULL != part)
-		{
-			// A Part name was specified.
-
-			// Only subscribe if the Part's an input.
-			if (part->IsInput())
-				dev->SetNotify(part, newState);
-		}
-		else
-		{
-			// Was a Part type name specified?
-			int partType = PartManager::LookupType(aName);
-
-			if (partType == ARDJACK_PART_TYPE_NONE)
-			{
-				Log::LogErrorF(PRM("DeviceManager::SubscribePart: '%s': Neither a Part nor a Part type: '%s'"), dev->Name, aName);
-				return false;
-			}
-
-			strcpy(aName, PartManager::GetPartTypeName(partType));
-
-			// Only subscribe if the Part type's an input.
-			if (PartManager::IsInputType(partType))
-				dev->SetNotify(partType, newState);
-		}
+		// Only subscribe if the Part's an input.
+		if (part->IsInput())
+			dev->SetNotify(part, newState);
 	}
 
 	// Send a response.

@@ -149,7 +149,7 @@ bool SerialConnection::SendText(const char* text)
 #ifdef ARDUINO
 	SERIAL_PORT_MONITOR.println(text);
 
-	//#if defined(ARDJACK_ARDUINO_DUE)
+	//#ifdef ARDJACK_ARDUINO_DUE
 	//	SERIAL_PORT_MONITOR.println(text);
 	//#endif
 #else

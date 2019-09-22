@@ -27,6 +27,7 @@
 
 #ifdef ARDUINO
 	#include <arduino.h>
+
 	#include "DetectBoard.h"
 
 	#ifdef ARDJACK_WIFI_AVAILABLE

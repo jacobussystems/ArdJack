@@ -96,6 +96,7 @@ CommandSet::CommandSet()
 #endif
 
 	AddCommand(PRM("HELP"), &CommandSet::command_help);
+	AddCommand(PRM("MEM"), &CommandSet::command_mem);
 
 #ifdef ARDJACK_NETWORK_AVAILABLE
 	AddCommand(PRM("NET"), &CommandSet::command_net);
@@ -567,6 +568,12 @@ bool CommandSet::command_help(const char* args)
 }
 
 
+bool CommandSet::command_mem(const char* args)
+{
+	return Displayer::DisplayMemory();
+}
+
+
 #ifdef ARDJACK_NETWORK_AVAILABLE
 
 bool CommandSet::command_net(const char* args)
@@ -767,6 +774,9 @@ bool CommandSet::command_test(const char* args)
 	int save = Globals::Verbosity;
 	Globals::Verbosity = 10;
 
+
+	Log::LogInfoF(PRM("--- STRING LISTS ---"));
+
 	StringList* sl1 = new StringList();
 
 	for (int i = 0; i < 3; i++)
@@ -779,6 +789,19 @@ bool CommandSet::command_test(const char* args)
 	}
 
 	delete sl1;
+
+
+	Log::LogInfoF(PRM("--- MESSAGES ---"));
+
+	IoTMessage* msg = new IoTMessage();
+	delete msg;
+
+
+	Log::LogInfoF(PRM("--- BEACONS ---"));
+
+	Beacon* beacon = new Beacon("beacon");
+	delete beacon;
+
 
 	Globals::Verbosity = save;
 	Log::LogInfoF(PRM("Exit"));

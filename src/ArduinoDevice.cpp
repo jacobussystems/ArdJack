@@ -281,8 +281,8 @@ bool ArduinoDevice::ApplyConfig(bool quiet)
 #ifdef ARDJACK_ESP32
 	bool ArduinoDevice::ConfigureEspressifESP32()
 	{
-		// HANGS HERE?
-		Log::LogInfo(PRM("ConfigureFeatherM0"));
+		// Using a 'DOIT ESP32 DEVKIT V4' for development.
+		Log::LogInfo(PRM("ConfigureEspressifESP32"));
 
 		// Analog Inputs (ADC pins).
 		AddPart("ai0", ARDJACK_PART_TYPE_ANALOG_INPUT, 0, A0);
@@ -311,10 +311,11 @@ bool ArduinoDevice::ApplyConfig(bool quiet)
 		AddParts("do", 4, ARDJACK_PART_TYPE_DIGITAL_OUTPUT, 0, 0, 10);
 
 		// LEDs.
-		AddPart("led0", ARDJACK_PART_TYPE_LED, 0, LED_BUILTIN);
+		//AddPart("led0", ARDJACK_PART_TYPE_LED, 0, 13);			// 23);				// LED_BUILTIN);
 
 #ifdef ARDJACK_INCLUDE_ARDUINO_DHT
 		// DHT.
+		// Using pin 2 for DHT.
 		AddPart("dht0", ARDJACK_PART_TYPE_USER, ARDJACK_USERPART_SUBTYPE_ARDUINO_DHT, 2);
 #endif
 
@@ -580,4 +581,3 @@ bool ArduinoDevice::WriteDigital(Part* part, Dynamic* value)
 }
 
 #endif
-

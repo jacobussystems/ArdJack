@@ -31,10 +31,10 @@
 	#include "stdafx.h"
 #endif
 
+#include "Dictionary.h"
 #include "Globals.h"
 
 class CommandSet;
-class Dictionary;
 
 
 

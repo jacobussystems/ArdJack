@@ -27,9 +27,10 @@
 
 // Arduino only.
 
-#include "Globals.h"
-
 #ifdef ARDUINO
+
+#include "DetectBoard.h"
+#include "Globals.h"
 
 #ifdef ARDJACK_INCLUDE_ARDUINO_DHT
 
@@ -41,6 +42,7 @@
 #include <SimpleDHT.h>
 
 #include "ArduinoDHT.h"
+#include "Configuration.h"
 #include "Log.h"
 #include "UserPart.h"
 #include "Utils.h"

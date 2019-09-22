@@ -1,5 +1,5 @@
 /*
-	ArduinoClock.h
+	FlashLibrary.h
 
 	By Jim Davies
 	Jacobus Systems, Brighton & Hove, UK
@@ -23,39 +23,25 @@
 	IN THE SOFTWARE.
 */
 
-
 #pragma once
 
 
-// Arduino only.
-
 #ifdef ARDUINO
+
+// Arduino only.
 
 #include <arduino.h>
 
-//#include "DateTime.h"
-#include "IoTClock.h"
+#include "DetectBoard.h"
+#include "Globals.h"
 
 
-
-class ArduinoClock : public IoTClock
-{
-protected:
-	unsigned long _InitialMillis;											// millis() when 'Start' was last called
-	DateTime _InitialTime;													// the set time when 'Start' was last called
-
-public:
-	ArduinoClock();
-	~ArduinoClock();
-
-	virtual bool Now(DateTime* dt) override;
-	virtual long NowMs() override;
-	virtual bool NowUtc(DateTime* dt) override;
-	virtual bool SetDate(int day, int month, int year, bool utc = false) override;
-	virtual bool SetDateTime(DateTime* dt, bool utc = false) override;
-	virtual bool SetTime(int hours, int minutes, int seconds, bool utc = false) override;
-	virtual bool Start(int day, int month, int year, int hours, int minutes, int seconds, bool utc = false) override;
-	virtual bool Stop() override;
-};
+#ifdef ARDJACK_FLASH_AVAILABLE
+	#ifdef ARDJACK_ARDUINO_DUE
+		#include <FlashAsEEPROM.h>
+	#else
+		#include <FlashStorage.h>
+	#endif
+#endif
 
 #endif

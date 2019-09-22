@@ -36,6 +36,7 @@
 #include "FifoBuffer.h"
 #include "Globals.h"
 #include "Log.h"
+#include "MemoryFreeExt.h"
 #include "Utils.h"
 
 #ifdef ARDUINO
@@ -279,7 +280,7 @@ bool Log::Output(const char* text)
 	//if (UseSerial)
 	//	SERIAL_PORT_MONITOR.println(text);
 
-	//#if defined(ARDJACK_ARDUINO_DUE)
+	//#ifdef ARDJACK_ARDUINO_DUE
 	//	if (UseSerialUSB)
 	//		SERIAL_PORT_MONITOR.println(text);
 	//#endif

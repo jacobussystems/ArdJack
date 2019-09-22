@@ -37,6 +37,7 @@
 #include "Bridge.h"
 #include "BridgeManager.h"
 #include "CmdInterpreter.h"
+#include "CommandSet.h"
 #include "ConfigProp.h"
 #include "Configuration.h"
 #include "Connection.h"

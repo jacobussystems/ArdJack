@@ -38,7 +38,7 @@
 
 class Connection;
 class DeviceCodec1;
-class Dictionary;
+//class Dictionary;
 class Dynamic;
 class FieldReplacer;
 class Shield;
@@ -104,6 +104,8 @@ public:
 	virtual bool DoBeep(int index, int freqHz, int durMs);
 	virtual bool DoFlash(const char* name = "led0", int durMs = 20);
 	virtual int GetCount(int partType);
+	virtual bool GetParts(const char* expr, Part* parts[], uint8_t* count, bool quiet = false);
+	virtual bool GetPartsOfType(int partType, Part* parts[], uint8_t* count);
 	static int LookupOperation(const char* name);
 	virtual Part* LookupPart(const char* name, bool quiet = false);
 	virtual bool LookupParts(const char* names, Part* parts[], uint8_t* count);

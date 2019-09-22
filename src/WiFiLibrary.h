@@ -25,20 +25,37 @@
 
 #pragma once
 
+
+#ifdef ARDUINO
+
+// Arduino only.
+
+#include <arduino.h>
+
 #include "DetectBoard.h"
 #include "Globals.h"
 
 
-#ifdef ARDJACK_WIFI_AVAILABLE
+//--------------------------------------------------------------------------------------------------------------------------
+// IMPORTANT:
+//--------------------------------------------------------------------------------------------------------------------------
 
-	#ifdef ARDJACK_ARDUINO_MKR
-		#include <WiFiNINA.h>
-	#else
-		#ifdef ARDJACK_ESP32
-			#include <WiFi.h>
-		#else
-			#include <WiFi101.h>
-		#endif
-	#endif
+// FOR VISUAL STUDIO + VISUAL MICRO, YOU NEED TO COMMENT/UNCOMMENT THE FOLLOWING THREE #includes TO MATCH THE BOARD IN USE.
+// Tried using the ArdJack conditionals, but weird errors when compiling in Visual Studio + Visual Micro.
+//		- Comment all 3 #includes for Arduino Due.
+//		- Repeat this in Ardjack.ino.
+
+// MKR1010 etc.
+#include <WiFiNINA.h>
+
+// ESP32 boards.
+//#include <WiFi.h>
+
+// Other boards with WiFi.
+//#include <WiFi101.h>
+
+//--------------------------------------------------------------------------------------------------------------------------
+
 
 #endif
+

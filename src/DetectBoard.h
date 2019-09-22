@@ -43,7 +43,7 @@
 #undef ARDJACK_WIFI_AVAILABLE
 
 
-#if defined(TEENSYDUINO) 
+#ifdef TEENSYDUINO
 	//  --------------- TEENSY -----------------
 
 	#if defined(__AVR_ATmega32U4__)

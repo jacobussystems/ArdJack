@@ -129,7 +129,7 @@ PartManager* Globals::PartMgr = NULL;
 bool Globals::RtcAvailable = false;
 char Globals::SpecialFieldPrefix[] = "";
 bool Globals::UserExit = false;
-int Globals::Verbosity = 0;
+int Globals::Verbosity = 3;
 
 #ifdef ARDUINO
 	int Globals::SerialSpeed;
