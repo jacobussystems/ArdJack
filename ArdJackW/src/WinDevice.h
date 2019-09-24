@@ -49,7 +49,6 @@ public:
 	virtual bool CreateDefaultInventory() override;
 	virtual bool DoBeep(int index, int freq_hz, int dur_ms) override;
 	virtual bool Open() override;
-	virtual bool SendResponse(int oper, const char* aName, const char* text, StringList* values = NULL) override;
 	virtual bool Write(Part* part, Dynamic* value) override;
 };
 

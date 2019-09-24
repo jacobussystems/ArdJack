@@ -197,9 +197,6 @@ bool StartupCommands();
 		ard->OutputConnection = _Ser0;
 		ard->SetActive(true);
 
-		// TEMPORARY:
-		strcpy(Globals::NotifyFrom, "DELL-9020");
-		strcpy(Globals::NotifyReturnPath, "device.rem0");
 		Globals::Interpreter->Execute(PRM("set name mkr2"));
 
 #ifdef ARDJACK_FLASH_AVAILABLE
@@ -386,21 +383,21 @@ bool StartupCommands();
 
 #ifdef ARDJACK_NETWORK_AVAILABLE
 		//Globals::Interpreter->Execute(PRM("add connection http0 http"));
-		//Globals::Interpreter->Execute(PRM("configure http0 "));
+		//Globals::Interpreter->Execute(PRM("configure http0 ???"));
 		//Globals::Interpreter->Execute(PRM("activate http0"));
-		//Globals::Interpreter->Execute(PRM("http0"));
 
 		//Globals::Interpreter->Execute(PRM("add connection tcp0 tcp"));
-		//Globals::Interpreter->Execute(PRM("configure tcp0 "));
-		//Globals::Interpreter->Execute(PRM("activate tcp0"));
-		//Globals::Interpreter->Execute(PRM("tcp0"));
+		//Globals::Interpreter->Execute(PRM("configure tcp0 ???"));
 
 		Globals::Interpreter->Execute(PRM("add connection udp0 udp"));
-		//Globals::Interpreter->Execute(PRM("configure udp0 ++"));
+		//Globals::Interpreter->Execute(PRM("configure udp0 inport=? outport=? outip=?"));
 		//Globals::Interpreter->Execute(PRM("activate udp0"));
-		//Globals::Interpreter->Execute(PRM("udp0"));
 
 		Globals::Interpreter->Execute(PRM("configure ard input=udp0 output=udp0"));
+		Globals::Interpreter->Execute(PRM("configure ard messageformat=0"));
+		Globals::Interpreter->Execute(PRM("configure ard messageprefix=$rem0:"));
+		Globals::Interpreter->Execute(PRM("configure ard messageto=\\rem0"));
+
 #endif
 
 #ifdef ARDJACK_INCLUDE_ARDUINO_MF_SHIELD
@@ -412,14 +409,12 @@ bool StartupCommands();
 		Globals::Interpreter->Execute(PRM("add beacon beacon0"));
 		Globals::Interpreter->Execute(PRM("configure beacon0 target=udp0 'text=[ip] [timems] beacon0!'"));
 		Globals::Interpreter->Execute(PRM("configure beacon0 'command=device ard write led0'"));
-		//Globals::Interpreter->Execute(PRM("beacon0"));
 #endif
 
 #ifdef ARDJACK_INCLUDE_DATALOGGERS
 		Globals::Interpreter->Execute(PRM("add datalogger data0"));
 		Globals::Interpreter->Execute(PRM("configure data0 input=ard output=udp0 'prefix=[ip] [timems]'"));
 		Globals::Interpreter->Execute(PRM("configure data0 interval=1000 'inparts=ai0 ai1 dht0'"));
-		//Globals::Interpreter->Execute(PRM("data0"));
 #endif
 
 #ifdef ARDJACK_NETWORK_AVAILABLE
@@ -440,7 +435,7 @@ bool StartupCommands();
 		// NOTES
 		//
 		// The default UDP Connection, 'udp0', is not activated above.
-		// If you want it activated at startup, uncomment this line above:
+		// If you want it activated at startup, uncomment this line above (or here):
 		//
 		//		Globals::Interpreter->Execute(PRM("activate udp0"));
 		//

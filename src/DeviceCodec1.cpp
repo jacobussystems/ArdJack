@@ -84,6 +84,10 @@ int DeviceCodec1::DecodeRequest(const char* line, char *aName, StringList* value
 		oper = ARDJACK_OPERATION_CONFIGUREPART;
 		break;
 
+	case '*':
+		oper = ARDJACK_OPERATION_ERROR;
+		break;
+
 	case '~':
 		oper = ARDJACK_OPERATION_GET_INVENTORY;
 		break;
@@ -176,67 +180,60 @@ int DeviceCodec1::DecodeRequest(const char* line, char *aName, StringList* value
 }
 
 
-bool DeviceCodec1::EncodeResponse(char *response, int oper, const char* aName, const char* text, StringList* values)
+bool DeviceCodec1::EncodeResponse(char *response, int oper, const char* aName, const char* text)
 {
 	// 'aName' is a Part name, Part Type name or empty (depending on 'oper').
 	response[0] = NULL;
 
-	switch (oper)
-	{
-		case ARDJACK_OPERATION_ACTIVATE:
-		case ARDJACK_OPERATION_CHANGED:
-		case ARDJACK_OPERATION_DEACTIVATE:
-		case ARDJACK_OPERATION_GET_COUNT:
-		case ARDJACK_OPERATION_GET_INFO:
-		case ARDJACK_OPERATION_READ:
-			if (((NULL == values) && (strlen(text) == 0)) || ((NULL != values) && (values->Count == 0)))
-			{
-				Log::LogErrorF(PRM("EncodeResponse: No response value(s) for operation %d, name '%s'"), oper, aName);
-				return false;
-			}
-	}
+	//switch (oper)
+	//{
+	//	case ARDJACK_OPERATION_ACTIVATE:
+	//	case ARDJACK_OPERATION_CHANGED:
+	//	case ARDJACK_OPERATION_DEACTIVATE:
+	//	case ARDJACK_OPERATION_GET_COUNT:
+	//	case ARDJACK_OPERATION_GET_INFO:
+	//	case ARDJACK_OPERATION_READ:
+	//		if ((NULL == text) || (strlen(text) == 0))
+	//		{
+	//			Log::LogErrorF(PRM("EncodeResponse: No response value(s) for operation %d, name '%s'"), oper, aName);
+	//			return false;
+	//		}
+	//}
 
 	switch (oper)
 	{
 		case ARDJACK_OPERATION_ACTIVATE:
 		case ARDJACK_OPERATION_DEACTIVATE:
 			strcat(response, "active ");
-			strcat(response, (NULL == values) ? text : values->Get(0));
+			strcat(response, text);
 			break;
 
 		case ARDJACK_OPERATION_CHANGED:
 			strcat(response, aName);
 			strcat(response, ".change ");
-			strcat(response, (NULL == values) ? text : values->Get(0));
+			strcat(response, text);
+			break;
+
+		case ARDJACK_OPERATION_ERROR:
+			strcat(response, "ERROR ");
+			strcat(response, text);
 			break;
 
 		case ARDJACK_OPERATION_GET_COUNT:
 			strcat(response, aName);
 			strcat(response, ".count ");
-			strcat(response, (NULL == values) ? text : values->Get(0));
+			strcat(response, text);
 			break;
 
 		case ARDJACK_OPERATION_GET_INFO:
 			strcat(response, "info ");
-			strcat(response, (NULL == values) ? text : values->Get(0));
+			strcat(response, text);
 			break;
 
 		case ARDJACK_OPERATION_READ:
 			strcat(response, aName);
-
-			if (NULL != values)
-			{
-				for (int i = 0; i < values->Count; i++)
-				{
-					strcat(response, " ");
-					strcat(response, values->Get(i));
-				}
-			}
-			else
-			{
-				strcat(response, " ");
-				strcat(response, text);
-			}
+			strcat(response, " ");
+			strcat(response, text);
 			break;
 
 		case ARDJACK_OPERATION_SUBSCRIBED:

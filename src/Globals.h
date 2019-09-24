@@ -90,9 +90,9 @@
 #define ARDJACK_MAX_COMMAND_LENGTH 110								// max.characters in a command
 #define ARDJACK_MAX_COMMAND_SETS 1									// max.no.of CommandSets
 #define ARDJACK_MAX_COMMANDS 24										// max.no.of commands
-#define ARDJACK_MAX_CONFIG_PROPERTIES 30									// max.no.of items in a Configuration
+#define ARDJACK_MAX_CONFIG_PROPERTIES 30							// max.no.of items in a Configuration
 #define ARDJACK_MAX_CONFIG_VALUE_LENGTH 40							// max.characters in a ConfigProp string
-#define ARDJACK_MAX_CONNECTION_OUTPUT_BUFFER_ITEM_LENGTH 120		// max.characters in a Connection o/p buffer item
+#define ARDJACK_MAX_CONNECTION_OUTPUT_BUFFER_ITEM_LENGTH 200		// max.characters in a Connection o/p buffer item
 #define ARDJACK_MAX_CONNECTION_OUTPUT_BUFFER_ITEMS 10				// max.items in the Connection o/p buffer
 #define ARDJACK_MAX_DATALOGGER_PARTS 10
 #define ARDJACK_MAX_DESCRIPTION_LENGTH 60							// max.characters in a description
@@ -128,7 +128,7 @@
 
 #ifdef ARDUINO
 	#define ARDJACK_MAX_COMMAND_BUFFER_ITEMS 4							// max.items in a command buffer
-	#define ARDJACK_MAX_CONNECTION_OUTPUT_BUFFER_ITEM_LENGTH 100		// max.characters in a Connection o/p buffer item
+	#define ARDJACK_MAX_CONNECTION_OUTPUT_BUFFER_ITEM_LENGTH 200		// max.characters in a Connection o/p buffer item
 	#define ARDJACK_MAX_CONNECTION_OUTPUT_BUFFER_ITEMS 4				// max.items in the Connection o/p buffer
 	#define ARDJACK_MAX_DEVICE_BUFFER_ITEMS 4							// max.items in a device buffer
 
@@ -329,18 +329,19 @@ const static int ARDJACK_OPERATION_CLEAR = 4;								// clear the inventory on t
 const static int ARDJACK_OPERATION_CONFIGURE = 5;							// configure the Device
 const static int ARDJACK_OPERATION_CONFIGUREPART = 6;						// configure a Part or Part type on the Device
 const static int ARDJACK_OPERATION_DEACTIVATE = 7;							// activate the Device
-const static int ARDJACK_OPERATION_FLASH = 8;								// flash a Part on the Device
-const static int ARDJACK_OPERATION_GET_COUNT = 9;							// get the count of a Part type on the Device
-const static int ARDJACK_OPERATION_GET_INFO = 10;							// get Device info
-const static int ARDJACK_OPERATION_GET_INVENTORY = 11;						// get the Device inventory
-const static int ARDJACK_OPERATION_NONE = 12;
-const static int ARDJACK_OPERATION_READ = 13;								// read a Part on the Device
-const static int ARDJACK_OPERATION_SUBSCRIBE = 14;							// subscribe to change notifications from the Device
-const static int ARDJACK_OPERATION_SUBSCRIBED = 15;							// the Device signals that a Part or Part type is 'subscribed' to
-const static int ARDJACK_OPERATION_UNSUBSCRIBE = 16;						// unsubscribe to change notifications from the Device
-const static int ARDJACK_OPERATION_UNSUBSCRIBED = 17;						// the Device signals that a Part or Part type is 'unsubscribed'
-const static int ARDJACK_OPERATION_UPDATE = 18;								// update the Device
-const static int ARDJACK_OPERATION_WRITE = 19;								// write to a Part on the Device
+const static int ARDJACK_OPERATION_ERROR = 8;								// an error occurred
+const static int ARDJACK_OPERATION_FLASH = 9;								// flash a Part on the Device
+const static int ARDJACK_OPERATION_GET_COUNT = 10;							// get the count of a Part type on the Device
+const static int ARDJACK_OPERATION_GET_INFO = 11;							// get Device info
+const static int ARDJACK_OPERATION_GET_INVENTORY = 12;						// get the Device inventory
+const static int ARDJACK_OPERATION_NONE = 13;
+const static int ARDJACK_OPERATION_READ = 14;								// read a Part on the Device
+const static int ARDJACK_OPERATION_SUBSCRIBE = 15;							// subscribe to change notifications from the Device
+const static int ARDJACK_OPERATION_SUBSCRIBED = 16;							// the Device signals that a Part or Part type is 'subscribed' to
+const static int ARDJACK_OPERATION_UNSUBSCRIBE = 17;						// unsubscribe to change notifications from the Device
+const static int ARDJACK_OPERATION_UNSUBSCRIBED = 18;						// the Device signals that a Part or Part type is 'unsubscribed'
+const static int ARDJACK_OPERATION_UPDATE = 19;								// update the Device
+const static int ARDJACK_OPERATION_WRITE = 20;								// write to a Part on the Device
 
 // Part types.
 const static int ARDJACK_PART_TYPE_ACCELEROMETER = 0;
@@ -505,8 +506,6 @@ public:
 #ifdef ARDJACK_NETWORK_AVAILABLE
 	static NetworkManager* NetworkMgr;
 #endif
-	static char NotifyFrom[ARDJACK_MAX_NAME_LENGTH];
-	static char NotifyReturnPath[ARDJACK_MAX_NAME_LENGTH];
 	static IoTManager* ObjectMgr;
 	static Register* ObjectRegister;
 	static char OneCommandPrefix[4];

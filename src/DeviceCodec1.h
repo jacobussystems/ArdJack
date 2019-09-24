@@ -45,6 +45,6 @@ public:
 	DeviceCodec1();
 
 	virtual int DecodeRequest(const char* line, char *aName, StringList* values);
-	virtual bool EncodeResponse(char *response, int oper, const char* aName, const char* text, StringList* values = NULL);
+	virtual bool EncodeResponse(char *response, int oper, const char* aName, const char* text);
 };
 

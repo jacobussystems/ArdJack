@@ -686,6 +686,9 @@ int Device::LookupOperation(const char* name)
 	if (strcmp(useName, PRM("flash")) == 0)
 		return ARDJACK_OPERATION_FLASH;
 
+	if (strcmp(useName, PRM("error")) == 0)
+		return ARDJACK_OPERATION_ERROR;
+
 	if (strcmp(useName, PRM("getcount")) == 0)
 		return ARDJACK_OPERATION_GET_COUNT;
 
@@ -997,11 +1000,11 @@ bool Device::SendNotification(Part* part)
 }
 
 
-bool Device::SendResponse(int oper, const char* aName, const char* text, StringList* values)
+bool Device::SendResponse(int oper, const char* aName, const char* text)
 {
 	char response[120];
 
-	DeviceCodec->EncodeResponse(response, oper, aName, text, values);
+	DeviceCodec->EncodeResponse(response, oper, aName, text);
 
 	if (strlen(response) == 0)
 	{

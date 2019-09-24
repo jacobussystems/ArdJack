@@ -145,6 +145,7 @@ bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int op
 	{
 	case ARDJACK_OPERATION_ACTIVATE:
 	{
+		// This probably isn't necessary, as the Device should already be active.
 		dev->SetActive(true);
 
 		char temp[10];
@@ -204,12 +205,20 @@ bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int op
 
 	case ARDJACK_OPERATION_DEACTIVATE:
 	{
-		dev->SetActive(false);
+		// DON'T deactivate the Device, as this might cause problems if it removes Route(s) from its input Connection.
+		//dev->SetActive(false);
 
-		char temp[10];
-		strcpy(temp, dev->Active() ? "1" : "0");
+		//char temp[10];
+		//strcpy(temp, dev->Active() ? "1" : "0");
 
-		return dev->SendResponse(oper, "", temp);
+		//return dev->SendResponse(oper, "", temp);
+
+		return true;
+	}
+
+	case ARDJACK_OPERATION_ERROR:
+	{
+		return true;
 	}
 
 	case ARDJACK_OPERATION_FLASH:
@@ -229,13 +238,21 @@ bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int op
 	{
 		if (strlen(aName) == 0)
 		{
-			Log::LogError(PRM("No Part type for GETCOUNT operation: '"), text, "'");
+			char temp[80];
+			sprintf(temp, PRM("%s GET_COUNT: No Part expression"), dev->Name);
+			dev->SendResponse(ARDJACK_OPERATION_ERROR, "", temp);
 			return false;
 		}
 
 		int partType = Globals::PartMgr->LookupType(aName);
+
 		if (partType == ARDJACK_PART_TYPE_NONE)
+		{
+			char temp[80];
+			sprintf(temp, PRM("%s GET_COUNT: Invalid Part expression '%s'"), dev->Name, aName);
+			dev->SendResponse(ARDJACK_OPERATION_ERROR, "", temp);
 			return false;
+		}
 
 		int partCount = dev->GetCount(partType);
 
@@ -260,10 +277,15 @@ bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int op
 
 	case ARDJACK_OPERATION_READ:
 	{
-		Part* part = dev->LookupPart(aName);
+		Part* part = dev->LookupPart(aName, true);
 
 		if (NULL == part)
+		{
+			char temp[80];
+			sprintf(temp, PRM("%s READ: Invalid Part expression '%s'"), dev->Name, aName);
+			dev->SendResponse(ARDJACK_OPERATION_ERROR, "", temp);
 			return false;
+		}
 
 		Dynamic value;
 		dev->Read(part, &value);
@@ -302,7 +324,9 @@ bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int op
 
 			if (partType == ARDJACK_PART_TYPE_NONE)
 			{
-				Log::LogErrorF(PRM("ExecuteDeviceOperation: Device '%s' - no such Part or Part type: '%s'"), dev->Name, aName);
+				char temp[80];
+				sprintf(temp, PRM("%s WRITE: Invalid Part name '%s'"), dev->Name, aName);
+				dev->SendResponse(ARDJACK_OPERATION_ERROR, "", temp);
 				return false;
 			}
 		}
@@ -529,14 +553,26 @@ int DeviceManager::LookupSubtype(const char* name)
 
 
 
-bool DeviceManager::SubscribePart(Device* dev, char* aName, bool newState)
+bool DeviceManager::SubscribePart(Device* dev, char* expr, bool newState)
 {
-	// 'aName' can be a PART name, a PART TYPE name, or "ALL" / "*" / "ALLIN".
+	// 'expr' can be a PART name, a PART TYPE name, or "ALL" / "*" / "ALLIN".
 	Part* parts[ARDJACK_MAX_PARTS];
 	uint8_t count;
 
-	if (!dev->GetParts(aName, parts, &count))
+	if (!dev->GetParts(expr, parts, &count) || (count == 0))
+	{
+		// 'expr' not recognised, or no such Parts.
+		char temp[100];
+
+		if (newState)
+			sprintf(temp, PRM("%s SUBSCRIBE: Invalid Part expression '%s'"), dev->Name, expr);
+		else
+			sprintf(temp, PRM("%s UNSUBSCRIBE: Invalid Part expression '%s'"), dev->Name, expr);
+
+		dev->SendResponse(ARDJACK_OPERATION_ERROR, "", temp);
+
 		return false;
+	}
 
 	// Subscribe/unsubscribe all Parts.
 	for (int i = 0; i < count; i++)
@@ -551,6 +587,6 @@ bool DeviceManager::SubscribePart(Device* dev, char* aName, bool newState)
 	// Send a response.
 	int oper = newState ? ARDJACK_OPERATION_SUBSCRIBED : ARDJACK_OPERATION_UNSUBSCRIBED;
 
-	return dev->SendResponse(oper, aName, Utils::Bool210(newState));
+	return dev->SendResponse(oper, expr, "");
 }
 

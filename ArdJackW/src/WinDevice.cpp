@@ -104,17 +104,6 @@ bool WinDevice::Open()
 }
 
 
-bool WinDevice::SendResponse(int oper, const char* aName, const char* text, StringList* values)
-{
-	char response[120];
-	DeviceCodec->EncodeResponse(response, oper, aName, text, values);
-
-	Log::LogInfo("'", Name, PRM("': "), response);
-
-	return true;
-}
-
-
 bool WinDevice::Write(Part* part, Dynamic* value)
 {
 	return value->Copy(&part->Value);

@@ -213,6 +213,8 @@ bool ConnectionManager::QueueOutput(Connection* conn, const char* text)
 	if (NULL == OutputBuffer)
 		return false;
 
+	// [type=response from=\\DELL-9020_A\win to=\\pcname\rem0] User.count 10 diskA diskB diskC diskD diskE diskF diskG diskH memFreePhys memTotalPhys
+
 	ConnectionOutputBufferItem item;
 	item.Conn = conn;
 	strcpy(item.Text, text);

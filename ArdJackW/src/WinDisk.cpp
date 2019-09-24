@@ -47,7 +47,7 @@
 WinDisk::WinDisk()
 	: UserPart()
 {
-
+	_IsInput = true;
 }
 
 

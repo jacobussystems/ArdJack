@@ -311,7 +311,7 @@ bool ArduinoDevice::ApplyConfig(bool quiet)
 		AddParts("do", 4, ARDJACK_PART_TYPE_DIGITAL_OUTPUT, 0, 0, 10);
 
 		// LEDs.
-		//AddPart("led0", ARDJACK_PART_TYPE_LED, 0, 13);			// 23);				// LED_BUILTIN);
+		//AddPart("led0", ARDJACK_PART_TYPE_LED, 0, 23);				// LED_BUILTIN);
 
 #ifdef ARDJACK_INCLUDE_ARDUINO_DHT
 		// DHT.

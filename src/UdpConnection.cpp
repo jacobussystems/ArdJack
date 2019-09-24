@@ -82,11 +82,11 @@ UdpConnection::UdpConnection(const char* name)
 	_CanOutput = true;
 
 	strcpy(_InputIp, "192.168.1.66");											// usually, the IP of 'this computer'
-	_InputPort = 5000;
+	_InputPort = 5001;
 
 	strcpy(_MulticastIp, "");
 	strcpy(_OutputIp, "192.168.1.66");
-	_OutputPort = 5001;
+	_OutputPort = 5000;
 	_Udp = NULL;
 	_UseMulticast = false;
 }

@@ -47,7 +47,7 @@
 WinMemory::WinMemory()
 	: UserPart()
 {
-
+	_IsInput = true;
 }
 
 
