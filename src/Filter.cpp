@@ -80,9 +80,9 @@ bool Filter::AddConfig()
 	if (Globals::Verbosity > 3)
 		Log::LogInfo(PRM("Filter::AddConfig: "), Name);
 
-	Config->AddRealProp("MaxInterval", "Maximum interval (from last notification time).", _MaxInterval, "ms");
-	Config->AddRealProp("MinDiff", "Minimum difference (from last notified state).", _MinDiff);
-	Config->AddRealProp("MinInterval", "Minimum interval (debounce).", _MinInterval, "ms");
+	Config->AddRealProp("MaxInterval", "Maximum interval (from last notification).", _MaxInterval, "ms");
+	Config->AddRealProp("MinDiff", "Minimum difference (analog, from last notified value).", _MinDiff);
+	Config->AddRealProp("MinInterval", "Minimum interval (debounce / data throttle).", _MinInterval, "ms");
 
 	return Config->SortItems();
 }
@@ -98,59 +98,67 @@ bool Filter::ApplyConfig(bool quiet)
 }
 
 
-bool Filter::Evaluate(double value, double lastValue, long lastTimeMs)
+bool Filter::EvaluateAnalog(double newValue, double lastNotifiedValue, long lastNotifiedMs)
 {
-	// Returns true if 'state' passes this filter, i.e. it's a significant change and should be notified.
-	double absDiff = abs(value - lastValue);
+	// Returns true if 'newValue' passes this filter, i.e. it's a change that should be notified.
 
-	if ((_MaxInterval > 0) && (absDiff != 0))
+	// Any changes?
+	//if ((newValue == lastNotifiedValue) && (newValue == lastChangeValue))
+	if (newValue == lastNotifiedValue)
+		return false;
+
+	// Are we within the minimum interval?
+	if (Utils::NowMs() < lastNotifiedMs + _MinInterval)
 	{
-		if (Utils::NowMs() >= lastTimeMs + _MaxInterval)
-			return true;
+		// Yes - ignore any changes.
+		return false;
 	}
 
-	if (_MinDiff == 0)
-		return true;
+	double absDiff = abs(newValue - lastNotifiedValue);
 
+	// Are we past the maximum interval?
+	if ((_MaxInterval > 0) && (absDiff != 0))
+	{
+		if (Utils::NowMs() >= lastNotifiedMs + _MaxInterval)
+		{
+			// Yes - notify the change.
+			return true;
+		}
+	}
+
+	// We're between the minimum and maximum intervals - check the difference against 'MinDiff'.
 	return (absDiff >= _MinDiff);
 }
 
 
-bool Filter::Evaluate(bool state, bool lastNotifiedState, long lastNotifiedMs, bool lastChangeState, long lastChangeMs)
+bool Filter::EvaluateDigital(bool newState, bool lastNotifiedState, long lastNotifiedMs, bool lastChangeState, long lastChangeMs)
 {
-	// Returns true if 'state' passes this filter, i.e. it's a change that should be notified.
+	// Returns true if 'newState' passes this filter, i.e. it's a change that should be notified.
 
 	// Any changes?
-	if ((state == lastNotifiedState) && (state == lastChangeState))
+	if ((newState == lastNotifiedState) && (newState == lastChangeState))
 		return false;
 
-	//Log::LogInfoF(PRM("Filter::Evaluate: state %d, lastNotifiedState %d, lastChangeState %d, lastChangeMs %d, lastNotifiedMs %d"),
-	//	state, lastNotifiedState, lastChangeState, lastChangeMs, lastNotifiedMs);
+	//Log::LogInfoF(PRM("Filter::Evaluate: newState %d, lastNotifiedState %d, lastChangeState %d, lastChangeMs %d, lastNotifiedMs %d"),
+	//	newState, lastNotifiedState, lastChangeState, lastChangeMs, lastNotifiedMs);
 
-	// Are we within a debounce period?
+	// Are we within a debounce period ('MinInterval')?
 	int nowMs = Utils::NowMs();
 
-	if ((state != lastChangeState) && (nowMs > lastChangeMs + _MinInterval))
+	if ((newState != lastChangeState) && (nowMs >= lastChangeMs + _MinInterval))
 	{
-		// Yes.
-		//Log::LogInfoF(PRM("Filter::Evaluate: Debounce start, state %d"), state);
+		// No.
+		// Start a new debounce period.
 		return false;
 	}
 
-	if ((state == lastChangeState) && (nowMs < lastChangeMs + _MinInterval))
+	if ((newState == lastChangeState) && (nowMs < lastChangeMs + _MinInterval))
 	{
-		// Yes.
-		if (nowMs < lastChangeMs + 50)
-			//Log::LogInfoF(PRM("Filter::Evaluate: Debounce inside, state %d"), state);
+		// Yes, we're inside the debounce period.
 		return false;
 	}
 
-	if (state == lastNotifiedState)
-		return false;
-
-	//Log::LogInfoF(PRM("Filter::Evaluate: PASS, state %d, lastNotifiedState %d, lastChangeState %d, lastChangeMs %d, lastNotifiedMs %d"),
-	//	state, lastNotifiedState, lastChangeState, lastChangeMs, lastNotifiedMs);
-
-	return true;
+	// We're not in a debounce period.
+	return (newState != lastNotifiedState);
 }
 

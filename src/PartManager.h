@@ -56,6 +56,7 @@ public:
 	static bool IsDigitalType(int type);
 	static bool IsInputType(int type);
 	static bool IsOutputType(int type);
+	static bool IsTextualType(int type);
 	static int LookupSubtype(const char* name, bool quiet = false);
 	static int LookupType(const char* name, bool quiet = false);
 	static const char* PartSubtypeName(int subtype, const char* defaultName = "");

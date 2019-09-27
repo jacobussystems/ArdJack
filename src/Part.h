@@ -82,6 +82,7 @@ public:
 	virtual bool IsDigitalOutput();
 	virtual bool IsInput();
 	virtual bool IsOutput();
+	virtual bool IsTextual();
 	virtual bool Read(Dynamic* value);
 	virtual bool Write(Dynamic* value);
 };

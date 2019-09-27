@@ -262,7 +262,7 @@ bool Device::CheckInput(Part* part, bool* change)
 	if (part->CheckChange())
 	{
 		*change = true;
-		SendNotification(part);
+		SignalChange(part);
 	}
 
 	return true;
@@ -990,16 +990,6 @@ bool Device::SendInventory(bool includeZeroCounts)
 }
 
 
-bool Device::SendNotification(Part* part)
-{
-	// Send a notification that the value of 'part' has changed.
-	char temp[ARDJACK_MAX_DYNAMIC_STRING_LENGTH];
-	part->Value.AsString(temp);
-
-	return SendResponse(ARDJACK_OPERATION_CHANGED, part->Name, temp);
-}
-
-
 bool Device::SendResponse(int oper, const char* aName, const char* text)
 {
 	char response[120];
@@ -1086,6 +1076,16 @@ bool Device::SetNotify(int partType, bool state)
 		Log::LogInfoF(PRM("SetNotify: '%s', Part type '%s' -> state %d"), Name, PartManager::GetPartTypeName(partType), state);
 
 	return true;
+}
+
+
+bool Device::SignalChange(Part* part)
+{
+	// Send a notification that the value of 'part' has changed.
+	char temp[ARDJACK_MAX_DYNAMIC_STRING_LENGTH];
+	part->Value.AsString(temp);
+
+	return SendResponse(ARDJACK_OPERATION_CHANGED, part->Name, temp);
 }
 
 

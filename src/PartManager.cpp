@@ -358,6 +358,23 @@ bool PartManager::IsOutputType(int type)
 }
 
 
+bool PartManager::IsTextualType(int type)
+{
+	switch (type)
+	{
+	case ARDJACK_PART_TYPE_KEYBOARD:
+	case ARDJACK_PART_TYPE_KEYPAD:
+	case ARDJACK_PART_TYPE_GRAPHIC_DISPLAY:
+	case ARDJACK_PART_TYPE_TEXT_DISPLAY:
+	case ARDJACK_PART_TYPE_TOUCHSCREEN:
+	case ARDJACK_PART_TYPE_TTS:
+		return true;
+	}
+
+	return false;
+}
+
+
 int PartManager::LookupSubtype(const char* name, bool quiet)
 {
 	return PartSubtypes->LookupName(name, ARDJACK_USERPART_SUBTYPE_NONE, quiet);

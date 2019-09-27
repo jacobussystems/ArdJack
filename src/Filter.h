@@ -56,7 +56,8 @@ public:
 
 	virtual bool AddConfig() override;
 	virtual bool ApplyConfig(bool quiet = false) override;
-	virtual bool Evaluate(double value, double lastNotifiedValue, long lastTimeMs);
-	virtual bool Evaluate(bool state, bool lastNotifiedState, long lastNotifiedMs, bool lastChangeState, long lastChangeMs);
+	virtual bool EvaluateAnalog(double newValue, double lastNotifiedValue, long lastNotifiedMs);
+	virtual bool EvaluateDigital(bool newState, bool lastNotifiedState, long lastNotifiedMs,
+		bool lastChangeState, long lastChangeMs);
 };
 

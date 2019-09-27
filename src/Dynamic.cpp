@@ -329,7 +329,7 @@ bool Dynamic::ValuesDiffer(Dynamic* src, bool ignoreCase, Filter* filter, bool l
 				return (_BoolVal != boolSrc);
 
 			// Yes.
-			return filter->Evaluate(_BoolVal, boolSrc, lastNotifiedMs, lastChangeState, lastChangeMs);
+			return filter->EvaluateDigital(_BoolVal, boolSrc, lastNotifiedMs, lastChangeState, lastChangeMs);
 		}
 
 		case ARDJACK_DATATYPE_STRING:
@@ -357,6 +357,6 @@ bool Dynamic::ValuesDiffer(Dynamic* src, bool ignoreCase, Filter* filter, bool l
 		return (abs(dblThis - dblSrc) > 1.99);
 
 	// Yes.
-	return filter->Evaluate(dblThis, dblSrc, lastNotifiedMs);
+	return filter->EvaluateAnalog(dblThis, dblSrc, lastNotifiedMs);
 }
 

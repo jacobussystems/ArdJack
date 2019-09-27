@@ -126,14 +126,24 @@ bool Part::AddConfig()
 
 bool Part::CheckChange()
 {
+	// Check for a change (the new value is already in 'Value').
 	bool result = false;
 
-	if ((Globals::Verbosity > 5) && IsDigitalInput())
+	if (Globals::Verbosity > 5)
 	{
 		char temp[10];
 		char temp2[10];
-		Log::LogInfoF(PRM("'%s', Value '%s', nv '%s', lcs %d"),
-			Name, Value.AsString(temp), NotifiedValue.AsString(temp2), LastChangeState);
+
+		if (IsDigitalInput())
+		{
+			Log::LogInfoF(PRM("'%s', Value '%s', nv '%s', lcs %d"),
+				Name, Value.AsString(temp), NotifiedValue.AsString(temp2), LastChangeState);
+		}
+		else
+		{
+			Log::LogInfoF(PRM("'%s', Value '%s', nv '%s'"),
+				Name, Value.AsString(temp), NotifiedValue.AsString(temp2));
+		}
 	}
 
 	if (Value.ValuesDiffer(&NotifiedValue, false, Filt, LastChangeState, LastChangeTime, NotifiedTime))
@@ -297,6 +307,12 @@ bool Part::IsInput()
 bool Part::IsOutput()
 {
 	return Globals::PartMgr->IsOutputType(Type);
+}
+
+
+bool Part::IsTextual()
+{
+	return Globals::PartMgr->IsTextualType(Type);
 }
 
 
