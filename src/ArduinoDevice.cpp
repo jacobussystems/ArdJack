@@ -180,7 +180,7 @@ bool ArduinoDevice::ApplyConfig(bool quiet)
 		Log::LogInfo(PRM("ConfigureArduinoMKR"));
 
 		// Analog Inputs (ADC pins).
-		AddParts("ai", 5, ARDJACK_PART_TYPE_ANALOG_INPUT, 0, 0, PIN_A1);
+		AddParts("ai", 6, ARDJACK_PART_TYPE_ANALOG_INPUT, 0, 0, PIN_A1);
 
 		// Analog Outputs (DAC pins).
 		AddPart("ao0", ARDJACK_PART_TYPE_ANALOG_OUTPUT, 0, PIN_A0);
@@ -188,23 +188,22 @@ bool ArduinoDevice::ApplyConfig(bool quiet)
 		// Digital Inputs.
 #ifdef ARDJACK_INCLUDE_ARDUINO_DHT
 		// Keep pin 2 for DHT.
-		AddParts("di", 2, ARDJACK_PART_TYPE_DIGITAL_INPUT, 0, 0, 0);
-		AddParts("di", 3, ARDJACK_PART_TYPE_DIGITAL_INPUT, 0, 2, 3);
-		//AddParts("di", 1, ARDJACK_PART_TYPE_DIGITAL_INPUT, 0, 5, 9);
+		AddParts("di", 2, ARDJACK_PART_TYPE_DIGITAL_INPUT, 0, 0, PIN_PA00);
+		AddParts("di", 3, ARDJACK_PART_TYPE_DIGITAL_INPUT, 0, 2, PIN_PA03);
+		AddParts("di", 1, ARDJACK_PART_TYPE_DIGITAL_INPUT, 0, 5, PIN_PA09);
 #else
-		AddParts("di", 6, ARDJACK_PART_TYPE_DIGITAL_INPUT, 0, 0, 0);
-		//AddParts("di", 1, ARDJACK_PART_TYPE_DIGITAL_INPUT, 0, 6, 9);
+		AddParts("di", 6, ARDJACK_PART_TYPE_DIGITAL_INPUT, 0, 0, PIN_PA00);
 #endif
 
 		// Digital Outputs.
-		AddParts("do", 3, ARDJACK_PART_TYPE_DIGITAL_OUTPUT, 0, 0, 10);
+		AddParts("do", 4, ARDJACK_PART_TYPE_DIGITAL_OUTPUT, 0, 0, PIN_PA10);
 
 		// LEDs.
 		AddPart("led0", ARDJACK_PART_TYPE_LED, 0, LED_BUILTIN);
 
 #ifdef ARDJACK_INCLUDE_ARDUINO_DHT
 		// DHT.
-		AddPart("dht0", ARDJACK_PART_TYPE_USER, ARDJACK_USERPART_SUBTYPE_ARDUINO_DHT, 2);
+		AddPart("dht0", ARDJACK_PART_TYPE_USER, ARDJACK_USERPART_SUBTYPE_ARDUINO_DHT, PIN_PA02);
 #endif
 
 		return true;

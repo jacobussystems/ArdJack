@@ -234,6 +234,20 @@ bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int op
 		return dev->DoFlash(aName, durMs);
 	}
 
+	case ARDJACK_OPERATION_GET_CONFIG:
+	{
+		if (strlen(aName) == 0)
+		{
+			char temp[80];
+			sprintf(temp, PRM("%s GET_CONFIG: No property name"), dev->Name);
+			dev->SendResponse(ARDJACK_OPERATION_ERROR, "", temp);
+			return false;
+		}
+
+		// TEMPORARY:
+		return true;
+	}
+
 	case ARDJACK_OPERATION_GET_COUNT:
 	{
 		if (strlen(aName) == 0)
@@ -272,7 +286,45 @@ bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int op
 		// Any subsequent argument -> 'include zero counts = true'.
 		bool includeZeroCounts = (values->Count > 0);
 
-		return dev->SendInventory(includeZeroCounts);
+		return dev->SendInventory(true, includeZeroCounts);
+	}
+
+	case ARDJACK_OPERATION_GET_PART_CONFIG:
+	{
+		if (strlen(aName) == 0)
+		{
+			char temp[80];
+			sprintf(temp, PRM("%s GET_PART_CONFIG: No Part name"), dev->Name);
+			dev->SendResponse(ARDJACK_OPERATION_ERROR, "", temp);
+			return false;
+		}
+
+		Part* part = dev->LookupPart(aName);
+		if (NULL == part) return false;
+
+		return dev->SendPartConfig(part);
+	}
+
+	case ARDJACK_OPERATION_REACTIVATE:
+	{
+		// Forced 'reactivation', i.e. Deactivate + Activate.
+
+		// Deactivate.
+		if (!dev->SendResponse(oper, "", "0"));								// send -before- we Deactivate
+			return false;
+
+		dev->SetActive(false);
+
+		// Activate.
+		dev->SetActive(true);
+
+		char temp[10];
+		strcpy(temp, dev->Active() ? "1" : "0");
+
+		if (!dev->SendResponse(oper, "", temp))
+			return false;
+
+		return true;
 	}
 
 	case ARDJACK_OPERATION_READ:
@@ -459,7 +511,7 @@ bool DeviceManager::InteractAction(Device* dev, const char* text, bool* handled)
 		bool includeZeroCounts = (count >= 2);
 		*handled = true;
 
-		return dev->SendInventory(includeZeroCounts);
+		return dev->SendInventory(true, includeZeroCounts);
 	}
 
 	if (Utils::StringEquals(action, "POLL", true))

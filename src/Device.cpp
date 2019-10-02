@@ -190,7 +190,7 @@ bool Device::ApplyConfig(bool quiet)
 {
 	// N.B. DON'T call the base class as the methods may overlap.
 	if (Globals::Verbosity > 4)
-		Log::LogInfo(PRM("Device::ApplyConfig"));
+		Log::LogInfo(PRM("Device::ApplyConfig: "), Name);
 
 	char inputName[ARDJACK_MAX_NAME_LENGTH];
 	char outputName[ARDJACK_MAX_NAME_LENGTH];
@@ -220,11 +220,10 @@ bool Device::ApplyConfig(bool quiet)
 
 	if (NULL != InputConnection)
 	{
-		char temp[50];
-		sprintf(temp, PRM("Device_%s"), Name);
-
 		// Setup a route for requests and responses.
-		Route* route = InputConnection->AddRoute(temp, ARDJACK_ROUTE_TYPE_REQUEST, Globals::DeviceBuffer, "");
+		char routeName[50];
+		sprintf(routeName, PRM("Device_%s"), Name);
+		Route* route = InputConnection->AddRoute(routeName, ARDJACK_ROUTE_TYPE_REQUEST, Globals::DeviceBuffer, "");
 		route->Target = this;
 		MessageFilter* msgFilter = &route->Filter;
 
@@ -237,6 +236,15 @@ bool Device::ApplyConfig(bool quiet)
 		MessageFilterItem* toFilter = &msgFilter->ToFilter;
 		toFilter->Operation = ARDJACK_STRING_COMPARE_ENDS_WITH;
 		sprintf(toFilter->Text, "\\%s", Name);
+
+		// Activate the input Connection.
+		InputConnection->SetActive(true);
+	}
+
+	if (NULL != OutputConnection)
+	{
+		// Activate the output Connection.
+		OutputConnection->SetActive(true);
 	}
 
 	return true;
@@ -308,6 +316,9 @@ bool Device::Close()
 			InputConnection->RemoveRoute(temp);
 		}
 
+		// Deactivate the input Connection?
+		// NO, not for now.
+
 		_IsOpen = false;
 	}
 
@@ -332,31 +343,13 @@ bool Device::CloseParts()
 }
 
 
-bool Device::Configure(const char* entity, StringList* settings, int start, int count)
+bool Device::Configure(const char* partExpr, StringList* settings, int start, int count)
 {
-	// 'entity', if defined, specifies a Part or Part type.
-	if (strlen(entity) == 0)
-		return IoTObject::Configure(entity, settings, start, count);
+	// 'partExpr', if defined, specifies a Part, Part type or a special Part type.
+	if (strlen(partExpr) == 0)
+		return IoTObject::Configure(partExpr, settings, start, count);
 
-	int partType;
-
-	Part* part = LookupPart(entity, true);
-	if (NULL == part)
-	{
-		//  It's not a Part name - is it a Part type?
-		partType = Globals::PartMgr->LookupType(entity, true);
-
-		if (partType == ARDJACK_PART_TYPE_NONE)
-		{
-			Log::LogErrorF(PRM("Device::Configure: '%s' Neither a Part nor a Part type: '%s'"), Name, entity);
-			return false;
-		}
-	}
-
-	if (NULL != part)
-		return ConfigurePart(part, settings, start, count);
-	else
-		return ConfigurePartType(partType, settings, start, count);
+	return ConfigureParts(partExpr, settings, start, count);
 }
 
 
@@ -431,12 +424,24 @@ bool Device::ConfigureForShield()
 #endif
 
 
-bool Device::ConfigurePart(Part* part, StringList* settings, int start, int count)
+bool Device::ConfigureParts(const char* partExpr, StringList* settings, int start, int count)
 {
-	// Modify part's configuration from 'settings'.
+	// Modify partExpr's configuration from 'settings'.
 	if (count == 0)
 		return true;
 
+	Part* parts[ARDJACK_MAX_PARTS];
+	uint8_t partCount;
+
+	GetParts(partExpr, parts, &partCount);
+
+	if (partCount == 0)
+	{
+		Log::LogErrorF(PRM("%s: Neither a Part nor a Part type: '%s'"), Name, partExpr);
+		return false;
+	}
+
+	// Deactivate - Configure - Activate.
 	bool wasActive = Active();
 
 	if (Active())
@@ -446,40 +451,10 @@ bool Device::ConfigurePart(Part* part, StringList* settings, int start, int coun
 			return false;
 	}
 
-	part->Configure(settings, start, count);
-
-	if (wasActive)
+	for (int i = 0; i < partCount; i++)
 	{
-		// Reactivate the Device.
-		if (!Activate())
-			return false;
-	}
-
-	return true;
-}
-
-
-bool Device::ConfigurePartType(int partType, StringList* settings, int start, int count)
-{
-	// Modify the configuration of Parts with type 'partType' from 'settings'.
-	if (count == 0)
-		return true;
-
-	bool wasActive = Active();
-
-	if (Active())
-	{
-		// Deactivate the Device.
-		if (!Deactivate())
-			return false;
-	}
-
-	for (int i = 0; i < PartCount; i++)
-	{
-		Part* part = Parts[i];
-
-		if (part->Type == partType)
-			part->Configure(settings, start, count);
+		if (!parts[i]->Configure(settings, start, count))
+			break;
 	}
 
 	if (wasActive)
@@ -553,7 +528,7 @@ int Device::GetCount(int partType)
 bool Device::GetParts(const char* expr, Part* parts[], uint8_t* count, bool quiet)
 {
 	// 'expr' is one of:
-	//		A special case like "ALL", "*", "AllIn", etc.
+	//		A special case like "All", "*", "AllIn", etc.
 	//		A Part's name.
 	//		A Part type.
 	// Populate 'parts' with the corresponding Part(s), and 'count' with the count.
@@ -601,6 +576,19 @@ bool Device::GetParts(const char* expr, Part* parts[], uint8_t* count, bool quie
 		return true;
 	}
 
+	if (Utils::StringEquals(useExpr, "allanalogin", false))
+	{
+		for (int i = 0; i < PartCount; i++)
+		{
+			Part* part = Parts[i];
+
+			if (Globals::PartMgr->IsAnalogType(part->Type) && Globals::PartMgr->IsInputType(part->Type))
+				parts[(*count)++] = part;
+		}
+
+		return true;
+	}
+
 	if (Utils::StringEquals(useExpr, "alldigital", false))
 	{
 		for (int i = 0; i < PartCount; i++)
@@ -608,6 +596,19 @@ bool Device::GetParts(const char* expr, Part* parts[], uint8_t* count, bool quie
 			Part* part = Parts[i];
 
 			if (Globals::PartMgr->IsDigitalType(part->Type))
+				parts[(*count)++] = part;
+		}
+
+		return true;
+	}
+
+	if (Utils::StringEquals(useExpr, "alldigitalin", false))
+	{
+		for (int i = 0; i < PartCount; i++)
+		{
+			Part* part = Parts[i];
+
+			if (Globals::PartMgr->IsDigitalType(part->Type) && Globals::PartMgr->IsInputType(part->Type))
 				parts[(*count)++] = part;
 		}
 
@@ -668,9 +669,6 @@ int Device::LookupOperation(const char* name)
 	if (strcmp(useName, PRM("beep")) == 0)
 		return ARDJACK_OPERATION_BEEP;
 
-	if (strcmp(useName, PRM("changed")) == 0)
-		return ARDJACK_OPERATION_CHANGED;
-
 	if (strcmp(useName, PRM("clear")) == 0)
 		return ARDJACK_OPERATION_CLEAR;
 
@@ -689,8 +687,14 @@ int Device::LookupOperation(const char* name)
 	if (strcmp(useName, PRM("error")) == 0)
 		return ARDJACK_OPERATION_ERROR;
 
+	if (strcmp(useName, PRM("getconfig")) == 0)
+		return ARDJACK_OPERATION_GET_CONFIG;
+
 	if (strcmp(useName, PRM("getcount")) == 0)
 		return ARDJACK_OPERATION_GET_COUNT;
+
+	if (strcmp(useName, PRM("getglobal")) == 0)
+		return ARDJACK_OPERATION_GET_GLOBAL;
 
 	if (strcmp(useName, PRM("getinfo")) == 0)
 		return ARDJACK_OPERATION_GET_INFO;
@@ -698,8 +702,17 @@ int Device::LookupOperation(const char* name)
 	if (strcmp(useName, PRM("getinventory")) == 0)
 		return ARDJACK_OPERATION_GET_INVENTORY;
 
+	if (strcmp(useName, PRM("getpartconfig")) == 0)
+		return ARDJACK_OPERATION_GET_PART_CONFIG;
+
+	if (strcmp(useName, PRM("reactivate")) == 0)
+		return ARDJACK_OPERATION_REACTIVATE;
+
 	if (strcmp(useName, PRM("read")) == 0)
 		return ARDJACK_OPERATION_READ;
+
+	if (strcmp(useName, PRM("setglobal")) == 0)
+		return ARDJACK_OPERATION_SET_GLOBAL;
 
 	if (strcmp(useName, PRM("subscribe")) == 0)
 		return ARDJACK_OPERATION_SUBSCRIBE;
@@ -740,7 +753,7 @@ Part* Device::LookupPart(const char* name, bool quiet)
 
 bool Device::LookupParts(const char* names, Part* parts[], uint8_t* count)
 {
-	// From a space-separated lst of part names in 'names', populate 'parts' with the Parts, and 'count' with the count.
+	// From a space-separated list of part names in 'names', populate 'parts' with the Parts, and 'count' with the count.
 	*count = 0;
 	StringList fields;
 
@@ -958,7 +971,7 @@ bool Device::ScanInputsOnce(bool *changes)
 }
 
 
-bool Device::SendInventory(bool includeZeroCounts)
+bool Device::SendInventory(bool includePartConfig, bool includeZeroCounts)
 {
 	char temp[200];
 
@@ -986,7 +999,26 @@ bool Device::SendInventory(bool includeZeroCounts)
 		}
 	}
 
+	if (includePartConfig)
+	{
+		for (int i = 0; i < PartCount; i++)
+		{
+			Part* part = Parts[i];
+
+			if (!SendPartConfig(part))
+				return false;
+		}
+	}
+
 	return true;
+}
+
+
+bool Device::SendPartConfig(Part* part)
+{
+	char temp[140];
+
+	return SendResponse(ARDJACK_OPERATION_GET_PART_CONFIG, part->Name, part->GetConfigStr(temp));
 }
 
 
@@ -1085,7 +1117,7 @@ bool Device::SignalChange(Part* part)
 	char temp[ARDJACK_MAX_DYNAMIC_STRING_LENGTH];
 	part->Value.AsString(temp);
 
-	return SendResponse(ARDJACK_OPERATION_CHANGED, part->Name, temp);
+	return SendResponse(ARDJACK_OPERATION_READ, part->Name, temp);
 }
 
 

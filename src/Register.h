@@ -52,10 +52,10 @@ public:
 	virtual bool AddObject(IoTObject *object);
 	virtual IoTObject* CreateObject(int type, int subtype, const char* name);
 	virtual bool DeleteObject(IoTObject* object);
+	virtual IoTObject* LookupName(const char* name, bool quiet = true);
+	virtual int LookupObject(IoTObject *object, bool quiet = true);
+	virtual int LookupObjectType(const char* name, int defaultValue = -1, bool quiet = true);
 	static const char* ObjectSubtypeName(int type, int subtype, const char* defaultName = "-");
 	static const char* ObjectTypeName(int type, const char* defaultName = "-");
-	virtual IoTObject* LookupName(const char* name);
-	virtual int LookupObject(IoTObject *object);
-	virtual int LookupObjectType(const char* name, int defaultValue = -1);
 };
 

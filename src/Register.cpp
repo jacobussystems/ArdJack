@@ -370,7 +370,7 @@ bool Register::DeleteObject(IoTObject* obj)
 }
 
 
-IoTObject *Register::LookupName(const char* name)
+IoTObject *Register::LookupName(const char* name, bool quiet)
 {
 	for (int i = 0; i < ObjectCount; i++)
 	{
@@ -380,11 +380,14 @@ IoTObject *Register::LookupName(const char* name)
 			return obj;
 	}
 
+	if (!quiet)
+		Log::LogError(PRM("Register: No such object: '"), name, "'");
+
 	return NULL;
 }
 
 
-int Register::LookupObject(IoTObject* object)
+int Register::LookupObject(IoTObject* object, bool quiet)
 {
 	for (int i = 0; i < ObjectCount; i++)
 	{
@@ -394,13 +397,16 @@ int Register::LookupObject(IoTObject* object)
 			return i;
 	}
 
+	if (!quiet)
+		Log::LogError(PRM("Register: No such object"));
+
 	return -1;
 }
 
 
-int Register::LookupObjectType(const char* name, int defaultValue)
+int Register::LookupObjectType(const char* name, int defaultValue, bool quiet)
 {
-	return ObjectTypes->LookupName(name, defaultValue);
+	return ObjectTypes->LookupName(name, defaultValue, quiet);
 }
 
 

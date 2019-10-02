@@ -103,6 +103,7 @@ CommandSet::CommandSet()
 #endif
 
 	//AddCommand(PRM("PING"), &CommandSet::command_nyi);							//&command_ping);
+	AddCommand(PRM("REACTIVATE"), &CommandSet::command_reactivate);
 	AddCommand(PRM("REPEAT"), &CommandSet::command_repeat);
 	AddCommand(PRM("RESET"), &CommandSet::command_reset);
 
@@ -206,7 +207,7 @@ bool CommandSet::command_activate(const char* args)
 		return true;
 	}
 
-	return Globals::ActivateObject(args, true);
+	return Globals::ActivateObjects(args, true);
 }
 
 
@@ -254,7 +255,7 @@ bool CommandSet::command_beep(const char* args)
 
 bool CommandSet::command_configure(const char* args)
 {
-	// Configure an Object (Bridge, Connection, DataLogger or Device), or a Device Part.
+	// Configure an Object (Bridge, Connection, DataLogger or Device), -or- a Device's Part(s).
 	// Syntax:
 	//		configure object item1=value1 item2=value2
 	//		configure device.part item1=value1 item2=value2
@@ -279,23 +280,24 @@ bool CommandSet::command_configure(const char* args)
 		return false;
 	}
 
-	// Parse the first field - is it in 'obj.entity' format?
+	// Parse the first field - is it in 'obj.partExpr' format?
 	char fields2[2][ARDJACK_MAX_VALUE_LENGTH];
+
 	int count2 = Utils::SplitText2Array(fields.Get(0), '.', fields2, 2, ARDJACK_MAX_VALUE_LENGTH);
+	bool dotSyntax = (count2 > 1);
 
 	char objName[ARDJACK_MAX_NAME_LENGTH];
-	char entity[ARDJACK_MAX_NAME_LENGTH];
-	bool entitySyntax = (count2 > 1);
+	char partExpr[ARDJACK_MAX_NAME_LENGTH];
 
-	if (entitySyntax)
+	if (dotSyntax)
 	{
 		strcpy(objName, fields2[0]);
-		strcpy(entity, fields2[1]);
+		strcpy(partExpr, fields2[1]);
 	}
 	else
 	{
 		strcpy(objName, fields2[0]);
-		entity[0] = NULL;
+		partExpr[0] = NULL;
 	}
 
 	// Check the Object name.
@@ -309,10 +311,10 @@ bool CommandSet::command_configure(const char* args)
 	if (Globals::Verbosity > 6)
 	{
 		char temp[102];
-		Log::LogInfoF(PRM("Configure: '%s', entity '%s'"), obj->ToString(temp), entity); 
+		Log::LogInfoF(PRM("Configure: '%s', partExpr '%s'"), obj->ToString(temp), partExpr); 
 	}
 
-	return obj->Configure(entity, &fields, 1, count - 1);
+	return obj->Configure(partExpr, &fields, 1, count - 1);
 }
 
 
@@ -337,7 +339,7 @@ bool CommandSet::command_deactivate(const char* args)
 		return true;
 	}
 
-	return Globals::ActivateObject(args, false);
+	return Globals::ActivateObjects(args, false);
 }
 
 
@@ -389,7 +391,7 @@ bool CommandSet::command_delete(const char* args)
 		return true;
 	}
 
-	return Globals::DeleteObject(args);
+	return Globals::DeleteObjects(args);
 }
 
 
@@ -594,6 +596,19 @@ bool CommandSet::command_nyi(const char* args)
 {
 	// NOT YET IMPLEMENTED.
 	return false;
+}
+
+
+bool CommandSet::command_reactivate(const char* args)
+{
+	// Rectivate zero or more 'IoTObjects' (reactivate = deactivate + activate).
+	if (Utils::StringIsNullOrEmpty(args))
+	{
+		Log::LogWarning(PRM("REACTIVATE command: No arguments"));
+		return true;
+	}
+
+	return Globals::ReactivateObjects(args);
 }
 
 

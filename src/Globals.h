@@ -321,27 +321,31 @@ const static int ARDJACK_OBJECT_TYPE_TRIGGER = 10;								// NOT IMPLEMENTED
 const static int ARDJACK_OBJECT_TYPE_UNKNOWN = 127;
 
 // Device Operation types.
-const static int ARDJACK_OPERATION_ACTIVATE = 0;							// activate the Device
-const static int ARDJACK_OPERATION_ADD = 1;									// add a Part to the Device
-const static int ARDJACK_OPERATION_BEEP = 2;								// make the Device beep
-const static int ARDJACK_OPERATION_CHANGED = 3;								// the Device notifies an i/p change
-const static int ARDJACK_OPERATION_CLEAR = 4;								// clear the inventory on the Device (remove all Parts)
-const static int ARDJACK_OPERATION_CONFIGURE = 5;							// configure the Device
-const static int ARDJACK_OPERATION_CONFIGUREPART = 6;						// configure a Part or Part type on the Device
-const static int ARDJACK_OPERATION_DEACTIVATE = 7;							// activate the Device
-const static int ARDJACK_OPERATION_ERROR = 8;								// an error occurred
-const static int ARDJACK_OPERATION_FLASH = 9;								// flash a Part on the Device
-const static int ARDJACK_OPERATION_GET_COUNT = 10;							// get the count of a Part type on the Device
-const static int ARDJACK_OPERATION_GET_INFO = 11;							// get Device info
-const static int ARDJACK_OPERATION_GET_INVENTORY = 12;						// get the Device inventory
-const static int ARDJACK_OPERATION_NONE = 13;
-const static int ARDJACK_OPERATION_READ = 14;								// read a Part on the Device
-const static int ARDJACK_OPERATION_SUBSCRIBE = 15;							// subscribe to change notifications from the Device
-const static int ARDJACK_OPERATION_SUBSCRIBED = 16;							// the Device signals that a Part or Part type is 'subscribed' to
-const static int ARDJACK_OPERATION_UNSUBSCRIBE = 17;						// unsubscribe to change notifications from the Device
-const static int ARDJACK_OPERATION_UNSUBSCRIBED = 18;						// the Device signals that a Part or Part type is 'unsubscribed'
-const static int ARDJACK_OPERATION_UPDATE = 19;								// update the Device
-const static int ARDJACK_OPERATION_WRITE = 20;								// write to a Part on the Device
+const static int ARDJACK_OPERATION_ACTIVATE = 0;					// activate the Device
+const static int ARDJACK_OPERATION_ADD = 1;							// add a Part to the Device
+const static int ARDJACK_OPERATION_BEEP = 2;						// make the Device beep
+const static int ARDJACK_OPERATION_CLEAR = 3;						// clear the inventory on the Device (remove all Parts)
+const static int ARDJACK_OPERATION_CONFIGURE = 4;					// configure the Device
+const static int ARDJACK_OPERATION_CONFIGUREPART = 5;				// configure a Part or Part type on the Device
+const static int ARDJACK_OPERATION_DEACTIVATE = 6;					// activate the Device
+const static int ARDJACK_OPERATION_ERROR = 7;						// an error occurred
+const static int ARDJACK_OPERATION_FLASH = 8;						// flash a Part on the Device
+const static int ARDJACK_OPERATION_GET_CONFIG = 9;					// get one property of the Device's configuration
+const static int ARDJACK_OPERATION_GET_COUNT = 10;					// get the count of a Part type on the Device
+const static int ARDJACK_OPERATION_GET_GLOBAL = 11;					// get a global setting (of the computer)
+const static int ARDJACK_OPERATION_GET_INFO = 12;					// get Device info
+const static int ARDJACK_OPERATION_GET_INVENTORY = 13;				// get the Device inventory
+const static int ARDJACK_OPERATION_GET_PART_CONFIG = 14;			// get all of the configuration of a Part on the Device
+const static int ARDJACK_OPERATION_NONE = 15;
+const static int ARDJACK_OPERATION_REACTIVATE = 16;					// reactivate = deactivate + activate
+const static int ARDJACK_OPERATION_READ = 17;						// read a Part on the Device
+const static int ARDJACK_OPERATION_SET_GLOBAL = 18;					// set a global setting (of the computer)
+const static int ARDJACK_OPERATION_SUBSCRIBE = 19;					// subscribe to change notifications from the Device
+const static int ARDJACK_OPERATION_SUBSCRIBED = 20;					// the Device signals that a Part or Part type is 'subscribed' to
+const static int ARDJACK_OPERATION_UNSUBSCRIBE = 21;				// unsubscribe to change notifications from the Device
+const static int ARDJACK_OPERATION_UNSUBSCRIBED = 22;				// the Device signals that a Part or Part type is 'unsubscribed'
+const static int ARDJACK_OPERATION_UPDATE = 23;						// update the Device
+const static int ARDJACK_OPERATION_WRITE = 24;						// write to a Part on the Device
 
 // Part types.
 const static int ARDJACK_PART_TYPE_ACCELEROMETER = 0;
@@ -531,16 +535,17 @@ public:
 #endif
 
 
-	static bool ActivateObject(const char* args, bool state);
+	static bool ActivateObjects(const char* args, bool state);
 	static IoTObject* AddObject(const char* args);
 	static IoTObject* AddObject(int type, int subtype, const char* name);
 	static bool CheckCommandBuffer();
 	static bool CheckDeviceBuffer();
-	static bool DeleteObject(const char* args);
+	static bool DeleteObjects(const char* args);
 	static bool DeleteSingleObject(IoTObject* obj);
 	static bool HandleDeviceRequest(Device *dev, const char* line);
 	static bool Init();
 	static bool QueueCommand(const char* line);
+	static bool ReactivateObjects(const char* args);
 	static bool Set(const char* name, const char* value, bool* handled);
 	static bool SetupStandardRoutes(Connection *pConn);
 

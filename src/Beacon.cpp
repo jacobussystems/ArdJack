@@ -123,7 +123,7 @@ bool Beacon::ApplyConfig(bool quiet)
 		return false;
 	}
 
-	_Target = Globals::ObjectRegister->LookupName(name);
+	_Target = Globals::ObjectRegister->LookupName(name, true);
 	if (NULL == _Target)
 	{
 		sprintf(temp, PRM("Beacon '%s': Invalid Target name ('%s')"), Name, name);

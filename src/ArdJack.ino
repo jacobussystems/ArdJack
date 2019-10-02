@@ -163,11 +163,6 @@ bool StartupCommands();
 
 		_Ser0->SetActive(true);
 
-		// TEMPORARY:
-		// What mode shall we use for 'ser0'?
-		_Ser0->Routes[0]->Filter.TextFilter.Operation = ARDJACK_STRING_COMPARE_STARTS_WITH;
-		//_Ser0->Routes[0]->Filter.TextFilter.Operation = ARDJACK_STRING_COMPARE_TRUE;
-
 		Globals::Clock->Start(1, 9, 2019, 0, 0, 0);
 
 		if (!Globals::RtcAvailable)
@@ -189,9 +184,10 @@ bool StartupCommands();
 		char temp[30];
 		Log::LogInfo(PRM("Time:              "), Utils::GetNow(temp));
 		Log::LogInfo(PRM("Verbosity:         "), Utils::Int2String(Globals::Verbosity));
+		Log::LogInfo();
 
 		// Setup predefined Objects.
-		Log::LogInfo(PRM("Setting up Arduino Device..."));
+		Log::LogInfo(PRM("Setting up Arduino Device 'ard'..."));
 
 		Device* ard = (Device*)Globals::AddObject(ARDJACK_OBJECT_TYPE_DEVICE, ARDJACK_DEVICE_SUBTYPE_ARDUINO, "ard");
 		ard->OutputConnection = _Ser0;
@@ -273,7 +269,7 @@ bool StartupCommands();
 		_NextCheckNetwork += 10000;														// check every 10 seconds
 
 		// TODO: Inefficient...
-		IoTObject* wifi0 = Globals::ObjectRegister->LookupName("wifi0");
+		IoTObject* wifi0 = Globals::ObjectRegister->LookupName("wifi0", true);
 		if (NULL == wifi0) return false;
 
 		if (wifi0->Active())
@@ -305,7 +301,7 @@ bool StartupCommands();
 	void PollNetwork()
 	{
 		// TODO: Inefficient...
-		Connection* udp0 = (Connection*)Globals::ObjectRegister->LookupName("udp0");
+		Connection* udp0 = (Connection*)Globals::ObjectRegister->LookupName("udp0", true);
 		if (NULL == udp0) return;
 
 		udp0->Poll();
@@ -345,7 +341,7 @@ bool StartupCommands();
 		Globals::SerialSpeed = speed;
 		Utils::DelayMs(1000);
 
-		SERIAL_PORT_MONITOR.println(PRM("Serial OK"));
+		SERIAL_PORT_MONITOR.println(PRM("# Serial OK"));
 
 		return true;
 	}
@@ -397,7 +393,11 @@ bool StartupCommands();
 		Globals::Interpreter->Execute(PRM("configure ard messageformat=0"));
 		Globals::Interpreter->Execute(PRM("configure ard messageprefix=$rem0:"));
 		Globals::Interpreter->Execute(PRM("configure ard messageto=\\rem0"));
-
+#else
+		Globals::Interpreter->Execute(PRM("configure ard input=ser0 output=ser0"));
+		Globals::Interpreter->Execute(PRM("configure ard messageformat=0"));
+		Globals::Interpreter->Execute(PRM("configure ard messageprefix=$rem0:"));
+		Globals::Interpreter->Execute(PRM("configure ard messageto=\\rem0"));
 #endif
 
 #ifdef ARDJACK_INCLUDE_ARDUINO_MF_SHIELD

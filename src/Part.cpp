@@ -262,6 +262,14 @@ bool Part::Deactivate()
 }
 
 
+char* Part::GetConfigStr(char* out)
+{
+	sprintf(out, PRM("pin=%d \"filter=%s\""), Pin, FilterName);
+
+	return out;
+}
+
+
 bool Part::IsAnalog()
 {
 	return Globals::PartMgr->IsAnalogType(Type);

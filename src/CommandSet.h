@@ -77,6 +77,7 @@ protected:
 	bool command_help(const char* args);
 	bool command_mem(const char* args);
 	bool command_nyi(const char* args);
+	bool command_reactivate(const char* args);
 	bool command_repeat(const char* args);
 	bool command_reset(const char* args);
 	bool command_send(const char* args);

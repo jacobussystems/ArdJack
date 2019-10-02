@@ -98,8 +98,7 @@ public:
 #ifdef ARDJACK_INCLUDE_SHIELDS
 	virtual bool ConfigureForShield();
 #endif
-	virtual bool ConfigurePart(Part* part, StringList* settings, int start, int count);
-	virtual bool ConfigurePartType(int partType, StringList* settings, int start, int count);
+	virtual bool ConfigureParts(const char* partExpr, StringList* settings, int start, int count);
 	virtual bool CreateDefaultInventory();
 	virtual bool DoBeep(int index, int freqHz, int durMs);
 	virtual bool DoFlash(const char* name = "led0", int durMs = 20);
@@ -118,7 +117,8 @@ public:
 	virtual bool ScanInputs(bool* changes, int count, int delayMs);
 	virtual bool ScanInputsOnce(bool* changes);
 	//virtual bool Send(int oper, int partType, int index, char values[][ARDJACK_MAX_VALUE_LENGTH]);
-	virtual bool SendInventory(bool includeZeroCounts = false);
+	virtual bool SendInventory(bool includePartConfig = true, bool includeZeroCounts = false);
+	virtual bool SendPartConfig(Part* part);
 	virtual bool SignalChange(Part* part);
 	virtual bool SendResponse(int oper, const char* aName, const char* text);
 	virtual bool SetNotify(Part* part, bool state);

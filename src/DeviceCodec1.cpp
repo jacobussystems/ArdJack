@@ -132,12 +132,17 @@ int DeviceCodec1::DecodeRequest(const char* line, char *aName, StringList* value
 	if (NULL == dot)
 	{
 		// There's no dot, e.g.
-		//	?ai0
-		//	read ai0
-		//	!di0 1
-		//	write di0 1
-		//	configure x=y xx=yy
-		//	getcount di
+		//		configure x=y xx=yy
+		//		configurepart ai0 x=y xx=yy
+		//		getconfig di2
+		//		getcount di
+		//		getglobal verbosity
+		//		getpartconfig ai0
+		//		read ai0
+		//		?ai0
+		//		setglobal verbosity 4
+		//		write di0 1
+		//		!di0 1
 
 		switch (oper)
 		{
@@ -162,7 +167,7 @@ int DeviceCodec1::DecodeRequest(const char* line, char *aName, StringList* value
 	}
 
 	// There's a dot, e.g.
-	//	?ai.count
+	//		?ai.count
 	int charCount = (int)(dot - field0);
 	strncpy(aName, field0, charCount);
 	aName[charCount] = NULL;
@@ -188,7 +193,6 @@ bool DeviceCodec1::EncodeResponse(char *response, int oper, const char* aName, c
 	//switch (oper)
 	//{
 	//	case ARDJACK_OPERATION_ACTIVATE:
-	//	case ARDJACK_OPERATION_CHANGED:
 	//	case ARDJACK_OPERATION_DEACTIVATE:
 	//	case ARDJACK_OPERATION_GET_COUNT:
 	//	case ARDJACK_OPERATION_GET_INFO:
@@ -204,13 +208,8 @@ bool DeviceCodec1::EncodeResponse(char *response, int oper, const char* aName, c
 	{
 		case ARDJACK_OPERATION_ACTIVATE:
 		case ARDJACK_OPERATION_DEACTIVATE:
+		case ARDJACK_OPERATION_REACTIVATE:
 			strcat(response, "active ");
-			strcat(response, text);
-			break;
-
-		case ARDJACK_OPERATION_CHANGED:
-			strcat(response, aName);
-			strcat(response, ".change ");
 			strcat(response, text);
 			break;
 
@@ -227,6 +226,12 @@ bool DeviceCodec1::EncodeResponse(char *response, int oper, const char* aName, c
 
 		case ARDJACK_OPERATION_GET_INFO:
 			strcat(response, "info ");
+			strcat(response, text);
+			break;
+
+		case ARDJACK_OPERATION_GET_PART_CONFIG:
+			strcat(response, aName);
+			strcat(response, ".config ");
 			strcat(response, text);
 			break;
 

@@ -57,25 +57,25 @@ bool SerialConnection::Activate()
 
 	Config->GetAsInteger("Speed", &_Speed);
 
-	if (Globals::Verbosity > 2)
+	// WARNING - Only do this if there's a speed change!
+	// We don't want to unnecessarily reboot the device...
+
+	if (_Speed != Globals::SerialSpeed)
 	{
-		char temp[120];
-		sprintf(temp, PRM("Activating Serial Connection '%s' at %d baud"), Name, _Speed);
-		Log::LogInfo(temp);
-	}
+		Log::LogInfoF(PRM("%s: Reopening Serial port at %d baud"), Name, _Speed);
 
-	SERIAL_PORT_MONITOR.begin(_Speed);
+		SERIAL_PORT_MONITOR.begin(_Speed);
 
-	Globals::SerialSpeed = _Speed;
-
-	Utils::DelayMs(100);
+		Globals::SerialSpeed = _Speed;
+		Utils::DelayMs(100);
 
 #ifdef ARDJACK_ARDUINO_MKR
-	Utils::DelayMs(500);
+		Utils::DelayMs(500);
 #else
-	//while (!Serial)
-	//	;
+		//while (!Serial)
+		//	;
 #endif
+	}
 
 	return true;
 }

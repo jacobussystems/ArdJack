@@ -105,7 +105,7 @@ bool IoTObject::ApplyConfig(bool quiet)
 }
 
 
-bool IoTObject::Configure(const char* entity, StringList* settings, int start, int count)
+bool IoTObject::Configure(const char* partExpr, StringList* settings, int start, int count)
 {
 	if (count == 0)
 		return true;
@@ -116,7 +116,7 @@ bool IoTObject::Configure(const char* entity, StringList* settings, int start, i
 	propName[0] = NULL;
 	propValue[0] = NULL;
 
-	// Ensure it's inactive.
+	// Ensure this object is inactive.
 	bool wasActive = Active();
 
 	if (!SetActive(false))

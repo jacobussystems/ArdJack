@@ -74,6 +74,7 @@ public:
 	virtual bool ConfigureMulti(const char* text);
 #endif
 	virtual bool Deactivate();
+	virtual char* GetConfigStr(char* out);
 	virtual bool IsAnalog();
 	virtual bool IsAnalogInput();
 	virtual bool IsAnalogOutput();

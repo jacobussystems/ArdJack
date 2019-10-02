@@ -163,7 +163,7 @@ int Globals::Verbosity = 3;
 
 
 
-bool Globals::ActivateObject(const char* args, bool state)
+bool Globals::ActivateObjects(const char* args, bool state)
 {
 	// Activate or Deactivate zero or more Objects.
 	char action[20];
@@ -220,7 +220,7 @@ IoTObject* Globals::AddObject(const char* args)
 	char typeName[ARDJACK_MAX_NAME_LENGTH];
 	strcpy(typeName, fields.Get(0));
 
-	int type = ObjectRegister->LookupObjectType(typeName);
+	int type = ObjectRegister->LookupObjectType(typeName, ARDJACK_OBJECT_TYPE_UNKNOWN);
 	if (type == ARDJACK_OBJECT_TYPE_UNKNOWN)
 	{
 		Log::LogError(PRM("Invalid object type: '"), fields.Get(0), "' in '", args, "'");
@@ -329,7 +329,7 @@ bool Globals::CheckDeviceBuffer()
 }
 
 
-bool Globals::DeleteObject(const char* args)
+bool Globals::DeleteObjects(const char* args)
 {
 	// Remove one or more 'IoTObjects'.
 	char name[ARDJACK_MAX_NAME_LENGTH];
@@ -357,7 +357,7 @@ bool Globals::DeleteObject(const char* args)
 
 			if (NULL == obj)
 			{
-				Log::LogError(PRM("Globals::DeleteObject: No such object: "), name);
+				Log::LogError(PRM("Globals::DeleteObjects: No such object: "), name);
 				return false;
 			}
 
@@ -544,6 +544,19 @@ bool Globals::QueueCommand(const char* line)
 		Log::LogInfo(PRM("Globals::QueueCommand: "), line);
 
 	CommandBuffer->Push(&item);
+
+	return true;
+}
+
+
+bool Globals::ReactivateObjects(const char* args)
+{
+	// Reactivate (Deactivate + Activate) zero or more Objects.
+	if (!ActivateObjects(args, false))
+		return false;
+
+	if (!ActivateObjects(args, true))
+		return false;
 
 	return true;
 }
