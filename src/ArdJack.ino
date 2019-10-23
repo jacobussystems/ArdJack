@@ -408,11 +408,6 @@ bool StartupCommands();
 		Globals::Interpreter->Execute(PRM("configure ard messageto=\\rem0"));
 #endif
 
-#ifdef ARDJACK_INCLUDE_ARDUINO_MF_SHIELD
-		Globals::Interpreter->Execute(PRM("configure ard shield=amfs"));
-		Globals::Interpreter->Execute(PRM("ard"));
-#endif
-
 #ifdef ARDJACK_INCLUDE_BEACONS
 		Globals::Interpreter->Execute(PRM("add beacon beacon0"));
 		Globals::Interpreter->Execute(PRM("configure beacon0 target=udp0 'text=[ip] [timems] beacon0!'"));
@@ -447,7 +442,11 @@ bool StartupCommands();
 		//
 		//		Globals::Interpreter->Execute(PRM("activate udp0"));
 		//
-		// Otherwise, it can be activated manually at runtime using the ArdJack command "activate udp0".
+		// Otherwise, it can be activated manually at runtime using the ArdJack command:
+		//		activate udp0
+		//
+		// or, assuming defaults, send the following from anywhere over an active Serial Connection:
+		//		$cc: activate udp0
 
 		return true;
 	}
