@@ -59,8 +59,8 @@ public:
 
 	virtual bool CreateInventory();
 	virtual bool Poll();
-	virtual bool ReadPart(Part* part, Dynamic* value);
-	virtual bool WritePart(Part* part, Dynamic* value);
+	virtual bool ReadPart(Part* part, Dynamic* value, bool* handled);
+	virtual bool WritePart(Part* part, Dynamic* value, bool* handled);
 };
 
 #endif

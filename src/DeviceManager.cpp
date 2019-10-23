@@ -310,7 +310,7 @@ bool DeviceManager::ExecuteDeviceOperation(Device* dev, const char* text, int op
 		// Forced 'reactivation', i.e. Deactivate + Activate.
 
 		// Deactivate.
-		if (!dev->SendResponse(oper, "", "0"));								// send -before- we Deactivate
+		if (!dev->SendResponse(oper, "", "0"))								// send -before- we Deactivate
 			return false;
 
 		dev->SetActive(false);

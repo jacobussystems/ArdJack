@@ -220,6 +220,9 @@ bool Device::ApplyConfig(bool quiet)
 
 	if (NULL != InputConnection)
 	{
+		if (Globals::Verbosity > 4)
+			Log::LogInfoF(PRM("Device::ApplyConfig: %s, adding Routes for '%s'"), Name, InputConnection->Name);
+
 		// Setup a route for requests and responses.
 		char routeName[50];
 		sprintf(routeName, PRM("Device_%s"), Name);
@@ -227,12 +230,12 @@ bool Device::ApplyConfig(bool quiet)
 		route->Target = this;
 		MessageFilter* msgFilter = &route->Filter;
 
-		// Default the 'Text' filter for 'Format 0' messages to use the Device name.
+		// Setup the 'Text' filter for 'Format 0' messages, using the Device name.
 		MessageFilterItem* textFilter = &msgFilter->TextFilter;
 		textFilter->Operation = ARDJACK_STRING_COMPARE_STARTS_WITH;
 		sprintf(textFilter->Text, "$%s:", Name);
 
-		// Default to a 'To' filter for 'Format 1' messages, using the Device name.
+		// Setup a 'To' filter for 'Format 1' messages, using the Device name.
 		MessageFilterItem* toFilter = &msgFilter->ToFilter;
 		toFilter->Operation = ARDJACK_STRING_COMPARE_ENDS_WITH;
 		sprintf(toFilter->Text, "\\%s", Name);
@@ -550,19 +553,6 @@ bool Device::GetParts(const char* expr, Part* parts[], uint8_t* count, bool quie
 		return true;
 	}
 
-	if (Utils::StringEquals(useExpr, "allin", false))
-	{
-		for (int i = 0; i < PartCount; i++)
-		{
-			Part* part = Parts[i];
-
-			if (Globals::PartMgr->IsInputType(part->Type))
-				parts[(*count)++] = part;
-		}
-
-		return true;
-	}
-
 	if (Utils::StringEquals(useExpr, "allanalog", false))
 	{
 		for (int i = 0; i < PartCount; i++)
@@ -610,6 +600,96 @@ bool Device::GetParts(const char* expr, Part* parts[], uint8_t* count, bool quie
 
 			if (Globals::PartMgr->IsDigitalType(part->Type) && Globals::PartMgr->IsInputType(part->Type))
 				parts[(*count)++] = part;
+		}
+
+		return true;
+	}
+
+	if (Utils::StringEquals(useExpr, "alldigitalout", false))
+	{
+		for (int i = 0; i < PartCount; i++)
+		{
+			Part* part = Parts[i];
+
+			if (Globals::PartMgr->IsDigitalType(part->Type) && Globals::PartMgr->IsOutputType(part->Type))
+				parts[(*count)++] = part;
+		}
+
+		return true;
+	}
+
+	if (Utils::StringEquals(useExpr, "allin", false))
+	{
+		for (int i = 0; i < PartCount; i++)
+		{
+			Part* part = Parts[i];
+
+			if (Globals::PartMgr->IsInputType(part->Type))
+				parts[(*count)++] = part;
+		}
+
+		return true;
+	}
+
+	if (Utils::StringEquals(useExpr, "allinout", false))
+	{
+		for (int i = 0; i < PartCount; i++)
+		{
+			Part* part = Parts[i];
+
+			if (Globals::PartMgr->IsInputType(part->Type) || Globals::PartMgr->IsOutputType(part->Type))
+					parts[(*count)++] = part;
+		}
+
+		return true;
+	}
+
+	if (Utils::StringEquals(useExpr, "allout", false))
+	{
+		for (int i = 0; i < PartCount; i++)
+		{
+			Part* part = Parts[i];
+
+			if (Globals::PartMgr->IsOutputType(part->Type))
+				parts[(*count)++] = part;
+		}
+
+		return true;
+	}
+
+	if (Utils::StringEquals(useExpr, "firstbuttonorswitch", false))
+	{
+		for (int i = 0; i < PartCount; i++)
+		{
+			Part* part = Parts[i];
+
+			if ((part->Type == ARDJACK_PART_TYPE_BUTTON) || (part->Type == ARDJACK_PART_TYPE_SWITCH))
+			{
+				parts[(*count)++] = part;
+				break;
+			}
+		}
+
+		if ((*count) == 0)
+		{
+			// Nothing found - fall back to 'firstdigitalin'.
+			return GetParts("firstdigitalin", parts, count, quiet);
+		}
+
+		return true;
+	}
+
+	if (Utils::StringEquals(useExpr, "firstdigitalin", false))
+	{
+		for (int i = 0; i < PartCount; i++)
+		{
+			Part* part = Parts[i];
+
+			if (Globals::PartMgr->IsDigitalType(part->Type) && Globals::PartMgr->IsInputType(part->Type))
+			{
+				parts[(*count)++] = part;
+				break;
+			}
 		}
 
 		return true;
@@ -776,7 +856,7 @@ bool Device::Open()
 	if (Globals::Verbosity > 3)
 	{
 #ifdef ARDJACK_INCLUDE_SHIELDS
-		Log::LogInfoF(PRM("Device::Open: '%s', shield '%s'"), Name, _ShieldName);
+		Log::LogInfoF(PRM("Device::Open: '%s', Shield '%s'"), Name, _ShieldName);
 #else
 		Log::LogInfoF(PRM("Device::Open: '%s'"), Name);
 #endif
@@ -819,6 +899,12 @@ bool Device::OpenParts()
 
 bool Device::Poll()
 {
+#ifdef ARDJACK_INCLUDE_SHIELDS
+	// Using a shield?
+	if (NULL != DeviceShield)
+		DeviceShield->Poll();
+#endif
+
 	PollInputs();
 	PollOutputs();
 
@@ -845,13 +931,22 @@ bool Device::Read(Part* part, Dynamic* value)
 {
 	value->Clear();
 
-	if (Globals::Verbosity > 3)
-		Log::LogInfoF(PRM("Read: '%s', part '%s'"), Name, part->Name);
+	if (Globals::Verbosity > 5)
+		Log::LogInfoF(PRM("Device::Read: '%s', part '%s'"), Name, part->Name);
 
 #ifdef ARDJACK_INCLUDE_SHIELDS
 	// Using a shield?
 	if (NULL != DeviceShield)
-		return DeviceShield->ReadPart(part, value);
+	{
+		bool handled = false;
+
+		// Offer this Read to the Shield.
+		if (!DeviceShield->ReadPart(part, value, &handled))
+			return false;
+
+		if (handled)
+			return true;
+	}
 #endif
 
 	switch (part->Type)
@@ -897,7 +992,7 @@ bool Device::ScanInputs(bool *changes, int count, int delay_ms)
 {
 	*changes = false;
 
-	if (Globals::Verbosity > 3)
+	if (Globals::Verbosity > 5)
 		Log::LogInfoF(PRM("ScanInputs: device '%s', count %d, delay %d ms"), Name, count, delay_ms);
 
 	for (int i = 0; i < count; i++)
@@ -914,7 +1009,8 @@ bool Device::ScanInputs(bool *changes, int count, int delay_ms)
 			Utils::DelayMs(delay_ms);
 	}
 
-	Log::LogInfo(PRM("ScanInputs: Done"));
+	if (Globals::Verbosity > 5)
+		Log::LogInfo(PRM("ScanInputs: Done"));
 
 	return true;
 }
@@ -963,7 +1059,8 @@ bool Device::ScanInputsOnce(bool *changes)
 				}
 			}
 
-			Log::LogInfo(Name, PRM(": Parts changed:"), temp);
+			if (Globals::Verbosity > 5)
+				Log::LogInfo(Name, PRM(": Parts changed:"), temp);
 		}
 	}
 
@@ -1141,17 +1238,28 @@ bool Device::ValidateConfig(bool quiet)
 
 bool Device::Write(Part* part, Dynamic* value)
 {
-	if (Globals::Verbosity > 4)
+	if (Globals::Verbosity > 5)
 	{
-		char temp[ARDJACK_MAX_DYNAMIC_STRING_LENGTH];
-		Log::LogInfoF(PRM("Device::Write: '%s', part '%s', value '%s'"), Name, part->Name, value->AsString(temp));
+		if (value->IsEmpty())
+			Log::LogInfoF(PRM("Device::Write: '%s', part '%s', no value"), Name, part->Name);
+		else
+		{
+			char temp[ARDJACK_MAX_DYNAMIC_STRING_LENGTH];
+			Log::LogInfoF(PRM("Device::Write: '%s', part '%s', value '%s'"), Name, part->Name, value->AsString(temp));
+		}
 	}
 
 #ifdef ARDJACK_INCLUDE_SHIELDS
 	// Using a shield?
 	if (NULL != DeviceShield)
 	{
-		if (DeviceShield->WritePart(part, value))
+		bool handled = false;
+
+		// Offer this Write to the Shield.
+		if (!DeviceShield->WritePart(part, value, &handled))
+			return false;
+
+		if (handled)
 			return true;
 	}
 #endif

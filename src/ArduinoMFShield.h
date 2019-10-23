@@ -53,8 +53,8 @@ public:
 
 	virtual bool CreateInventory() override;
 	virtual bool Poll() override;
-	virtual bool ReadPart(Part* part, Dynamic* value) override;
-	virtual bool WritePart(Part* part, Dynamic* value) override;
+	virtual bool ReadPart(Part* part, Dynamic* value, bool* handled) override;
+	virtual bool WritePart(Part* part, Dynamic* value, bool* handled) override;
 };
 
 

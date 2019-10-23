@@ -909,6 +909,7 @@ bool Displayer::DisplayStatus()
 	Log::LogInfo(PRM("  DataLoggers                 "), Utils::Bool2yesno(Globals::IncludeDataLoggers));
 	Log::LogInfo(PRM("  Persistence                 "), Utils::Bool2yesno(Globals::IncludePersistence));
 	Log::LogInfo(PRM("  Shields                     "), Utils::Bool2yesno(Globals::IncludeShields));
+	Log::LogInfo(PRM("  Thinker Shield              "), Utils::Bool2yesno(Globals::IncludeThinkerShield));
 	Log::LogInfo(PRM("  WinDisk (UserPart)          "), Utils::Bool2yesno(Globals::IncludeWinDisk));
 	Log::LogInfo(PRM("  WinMemory (UserPart)        "), Utils::Bool2yesno(Globals::IncludeWinMemory));
 

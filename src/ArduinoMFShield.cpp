@@ -129,27 +129,29 @@ bool ArduinoMFShield::Poll()
 }
 
 
-bool ArduinoMFShield::ReadPart(Part* part, Dynamic* value)
+bool ArduinoMFShield::ReadPart(Part* part, Dynamic* value, bool* handled)
 {
+	*handled = false;
+
 	switch (part->Type)
 	{
 	default:
-		return false;
+		break;
 	}
 
 	return true;
 }
 
 
-bool ArduinoMFShield::WritePart(Part* part, Dynamic* value)
+bool ArduinoMFShield::WritePart(Part* part, Dynamic* value, bool* handled)
 {
-	if (Globals::Verbosity > 3)
+	*handled = false;
+
+	if (Globals::Verbosity > 5)
 	{
-		char temp[102];
-		char temp2[ARDJACK_MAX_DYNAMIC_STRING_LENGTH];
-		value.AsString(temp2);
-		sprintf(temp, PRM("ArduinoMFShield::WritePart: type %d, '%s'"), part->Type, temp2);
-		Log::LogInfo(temp);
+		char temp[ARDJACK_MAX_DYNAMIC_STRING_LENGTH];
+		value->AsString(temp);
+		Log::LogInfoF(PRM("ArduinoMFShield::WritePart: type %d, '%s'"), part->Type, temp);
 	}
 
 	int intValue;
@@ -157,21 +159,24 @@ bool ArduinoMFShield::WritePart(Part* part, Dynamic* value)
 	switch (part->Type)
 	{
 	//case ARDJACK_PART_TYPE_LED:
-	//	_MFShield->setLed(0, 1);
-	//	break;
+		//_MFShield->setLed(0, 1);
+		//*handled = true;
+		//break;
 
 	case ARDJACK_PART_TYPE_SOUND:
 		// Beep for 5 ms (no longer, because it's too loud!).
 		_MFShield->beep(5);
+		*handled = true;
 		break;
 
 	case ARDJACK_PART_TYPE_TEXT_DISPLAY:
-		intValue = value.AsInt();
+		intValue = value->AsInt();
 		_MFShield->display(intValue);
+		*handled = true;
 		break;
 
 	default:
-		return false;
+		break;
 	}
 
 	return true;

@@ -55,7 +55,7 @@ public:
 	void* CallbackObj;										// callback object (for synchronous working)
 	MessageFilter Filter;
 	char Name[ARDJACK_MAX_NAME_LENGTH];
-	bool StopIfHandled;
+	bool StopOnRouted;
 	Device* Target;											// set if the Route is created by a Device
 	//char Target[ARDJACK_MAX_NAME_LENGTH];					// target object (for types: Command, Request, Response)
 	int Type;

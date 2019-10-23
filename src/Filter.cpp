@@ -80,9 +80,9 @@ bool Filter::AddConfig()
 	if (Globals::Verbosity > 3)
 		Log::LogInfo(PRM("Filter::AddConfig: "), Name);
 
-	Config->AddRealProp("MaxInterval", "Maximum interval (from last notification).", _MaxInterval, "ms");
+	Config->AddRealProp("MaxInt", "Maximum interval (from last notification).", _MaxInterval, "ms");
 	Config->AddRealProp("MinDiff", "Minimum difference (analog, from last notified value).", _MinDiff);
-	Config->AddRealProp("MinInterval", "Minimum interval (debounce / data throttle).", _MinInterval, "ms");
+	Config->AddRealProp("MinInt", "Minimum interval (debounce / data throttle).", _MinInterval, "ms");
 
 	return Config->SortItems();
 }

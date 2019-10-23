@@ -46,6 +46,7 @@
 
 
 #ifdef ARDJACK_INCLUDE_SHIELDS
+#ifdef ARDJACK_INCLUDE_THINKER_SHIELD
 
 ThinkerShield::ThinkerShield(const char* name)
 	: Shield(name)
@@ -56,6 +57,9 @@ ThinkerShield::ThinkerShield(const char* name)
 bool ThinkerShield::CreateInventory()
 {
 	// Add Parts to Device 'Owner'.
+	if (!Shield::CreateInventory())
+		return false;
+
 	if (Globals::Verbosity > 3)
 		Log::LogInfo(PRM("ThinkerShield::CreateInventory"));
 
@@ -84,7 +88,7 @@ bool ThinkerShield::CreateInventory()
 #ifdef ARDJACK_ESP32
 	//Owner->AddParts("led", 5, ARDJACK_PART_TYPE_LED, 0, 1, ?);
 #else
-	Owner->AddPart("led0", ARDJACK_PART_TYPE_LED, 5, LED_BUILTIN);
+	Owner->AddPart("led0", ARDJACK_PART_TYPE_LED, 0, LED_BUILTIN);
 	Owner->AddParts("led", 5, ARDJACK_PART_TYPE_LED, 0, 1, 8);
 #endif
 
@@ -100,7 +104,11 @@ bool ThinkerShield::CreateInventory()
 	// Switches.
 	Owner->AddPart("switch0", ARDJACK_PART_TYPE_SWITCH, 0, 7);
 
+	if (Globals::Verbosity > 3)
+		Log::LogInfoF(PRM("ThinkerShield::CreateInventory: %d parts"), Owner->PartCount);
+
 	return true;
 }
 
+#endif
 #endif

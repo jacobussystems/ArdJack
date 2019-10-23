@@ -112,6 +112,7 @@ bool Globals::IncludeBridges = false;
 bool Globals::IncludeDataLoggers = false;
 bool Globals::IncludePersistence = false;
 bool Globals::IncludeShields = false;
+bool Globals::IncludeThinkerShield = false;
 bool Globals::IncludeWinDisk = false;
 bool Globals::IncludeWinMemory = false;
 bool Globals::InitialisedStatic = false;
@@ -498,6 +499,10 @@ bool Globals::Init()
 
 #ifdef ARDJACK_INCLUDE_SHIELDS
 	IncludeShields = true;
+#endif
+
+#ifdef ARDJACK_INCLUDE_THINKER_SHIELD
+	IncludeThinkerShield = true;
 #endif
 
 #ifdef ARDJACK_INCLUDE_WINDISK

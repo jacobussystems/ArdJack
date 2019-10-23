@@ -53,6 +53,9 @@ Shield::Shield(const char* name)
 bool Shield::CreateInventory()
 {
 	// Add Parts to Device 'Owner'.
+	if (NULL == Owner)
+		return false;
+
 	return Owner->ClearInventory();
 }
 
@@ -63,15 +66,21 @@ bool Shield::Poll()
 }
 
 
-bool Shield::ReadPart(Part* part, Dynamic* value)
+bool Shield::ReadPart(Part* part, Dynamic* value, bool* handled)
 {
-	return false;
+	// The Shield is offered this Read and sets 'handled' to true if it handles it.
+	*handled = false;
+
+	return true;
 }
 
 
-bool Shield::WritePart(Part* part, Dynamic* value)
+bool Shield::WritePart(Part* part, Dynamic* value, bool* handled)
 {
-	return false;
+	// The Shield is offered this Write and sets 'handled' to true if it handles it.
+	*handled = false;
+
+	return true;
 }
 
 #endif

@@ -36,6 +36,7 @@
 
 
 #ifdef ARDJACK_INCLUDE_SHIELDS
+#ifdef ARDJACK_INCLUDE_THINKER_SHIELD
 
 class ThinkerShield : public Shield
 {
@@ -47,4 +48,5 @@ public:
 	virtual bool CreateInventory() override;
 };
 
+#endif
 #endif

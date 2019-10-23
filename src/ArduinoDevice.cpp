@@ -406,13 +406,22 @@ bool ArduinoDevice::CreateDefaultInventory()
 
 bool ArduinoDevice::Read(Part* part, Dynamic* value)
 {
+	if (Globals::Verbosity > 5)
+		Log::LogInfoF(PRM("Read: '%s', part '%s'"), Name, part->Name);
+
 	value->Clear();
 
 #ifdef ARDJACK_INCLUDE_SHIELDS
 	// Using a shield?
 	if (NULL != DeviceShield)
 	{
-		if (DeviceShield->ReadPart(part, value))
+		bool handled = false;
+
+		// Offer this Read to the Shield.
+		if (!DeviceShield->ReadPart(part, value, &handled))
+			return false;
+
+		if (handled)
 			return true;
 	}
 #endif
@@ -486,23 +495,32 @@ bool ArduinoDevice::ReadDigital(Part* part, Dynamic* value)
 
 bool ArduinoDevice::Write(Part* part, Dynamic* value)
 {
-	if (Globals::Verbosity > 4)
+	if (Globals::Verbosity > 5)
 	{
 		if (value->IsEmpty())
-			Log::LogInfo(PRM("ArduinoDevice::Write: '"), Name, PRM("', part '"), part->Name, PRM("', no value"));
+			Log::LogInfoF(PRM("ArduinoDevice::Write: '%s', part '%s', no value"), Name, part->Name);
 		else
 		{
-			char temp2[ARDJACK_MAX_PART_VALUE_LENGTH];
-			value->AsString(temp2);
+			char temp[ARDJACK_MAX_PART_VALUE_LENGTH];
+			value->AsString(temp);
 
-			Log::LogInfo(PRM("ArduinoDevice::Write: '"), Name, PRM("', part '"), part->Name, PRM("', value '"), temp2, "'");
+			Log::LogInfoF(PRM("ArduinoDevice::Write: '%s', part '%s', value '%s'"), Name, part->Name, temp);
 		}
 	}
 
 #ifdef ARDJACK_INCLUDE_SHIELDS
 	// Using a shield?
 	if (NULL != DeviceShield)
-		return DeviceShield->WritePart(part, value);
+	{
+		bool handled = false;
+
+		// Offer this Write to the Shield.
+		if (!DeviceShield->WritePart(part, value, &handled))
+			return false;
+
+		if (handled)
+			return true;
+	}
 #endif
 
 	switch (part->Type)

@@ -43,7 +43,7 @@ Route::Route(const char* name, int type)
 	Callback = NULL;
 	CallbackObj = NULL;
 	strcpy(Name, name);
-	StopIfHandled = true;
+	StopOnRouted = true;
 	Target = NULL;
 	Type = type;
 }
@@ -91,11 +91,11 @@ bool Route::Handle(IoTMessage* msg)
 }
 
 
-void Route::SetTextFilter(const char* text, int operation)
+void Route::SetTextFilter(const char* prefix, int operation)
 {
-	// Set the Text filter (for Format 0 messages).
+	// Set the Text filter (for Format 0 messages) to a prefix test.
 	MessageFilterItem* textFilter = &Filter.TextFilter;
+	strcpy(textFilter->Text, prefix);
 	textFilter->Operation = ARDJACK_STRING_COMPARE_STARTS_WITH;
-	strcpy(textFilter->Text, text);
 }
 

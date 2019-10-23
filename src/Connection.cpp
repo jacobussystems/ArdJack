@@ -135,12 +135,12 @@ Route* Connection::AddRoute(const char* name, int type, FifoBuffer *buffer, cons
 		result = new Route(name);
 		Routes[RouteCount++] = result;
 
-		if (Globals::Verbosity > 6)
+		if (Globals::Verbosity > 5)
 			Log::LogInfoF(PRM("Connection::AddRoute: %s, adding route '%s'"), Name, name);
 	}
 	else
 	{
-		if (Globals::Verbosity > 6)
+		if (Globals::Verbosity > 5)
 			Log::LogInfoF(PRM("Connection::AddRoute: %s, reusing route '%s'"), Name, name);
 	}
 
@@ -498,23 +498,27 @@ bool Connection::RouteInputMessage(IoTMessage* msg, bool* routed)
 		return true;
 	}
 
+	bool stopped = false;
+
 	// Are any Routes set to 'AlwaysUse'?
 	for (int i = 0; i < RouteCount; i++)
 	{
 		Route* route = Routes[i];
 
-		// Always use this Route?
 		if (route->AlwaysUse)
 		{
 			route->Handle(msg);
 			*routed = true;
 
-			if (route->StopIfHandled)
+			if (route->StopOnRouted)
+			{
+				stopped = true;
 				break;
+			}
 		}
 	}
 
-	if (!*routed)
+	if (!*routed || !stopped)
 	{
 		// Try to match 'msg' to one or more Route's filters.
 		for (int i = 0; i < RouteCount; i++)
@@ -530,7 +534,7 @@ bool Connection::RouteInputMessage(IoTMessage* msg, bool* routed)
 				route->Handle(msg);
 				*routed = true;
 
-				if (route->StopIfHandled)
+				if (route->StopOnRouted)
 					break;
 			}
 			else
@@ -560,8 +564,8 @@ bool Connection::RouteInputMessage(IoTMessage* msg, bool* routed)
 		}
 
 		DefaultRoute->Handle(msg);
-
 		*routed = true;
+
 		return true;
 	}
 
@@ -573,7 +577,7 @@ bool Connection::RouteInputMessage(IoTMessage* msg, bool* routed)
 	}
 	else
 	{
-		if (Globals::Verbosity > 5)
+		if (Globals::Verbosity > 6)
 			Log::LogInfo(PRM("Connection::RouteInputMessage: '"), Name, PRM("' didn't route message: '"), msg->Text(), "'");
 	}
 

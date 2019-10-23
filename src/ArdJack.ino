@@ -47,6 +47,10 @@
 	#include <SimpleDHT.h>
 #endif
 
+#ifdef ARDJACK_INCLUDE_SHIELDS
+	#include <MFShield.h>
+#endif
+
 #ifdef ARDJACK_ETHERNET_AVAILABLE
 	#include <SPI.h>
 	#include <Ethernet.h>
@@ -211,7 +215,11 @@ bool StartupCommands();
 		Globals::ReadExecuteStartupFile();
 #endif
 
+		ard->SetActive(false);
+
 		StartupCommands();
+
+		ard->SetActive(true);
 
 		Log::LogInfo();
 		Log::LogInfo(PRM("--- READY ---"));

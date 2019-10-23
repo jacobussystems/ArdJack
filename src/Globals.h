@@ -53,13 +53,14 @@
 #undef ARDJACK_INCLUDE_PERSISTENCE
 #undef ARDJACK_INCLUDE_SHIELDS
 #undef ARDJACK_INCLUDE_TESTS
+#undef ARDJACK_INCLUDE_THINKER_SHIELD
 #undef ARDJACK_INCLUDE_WINDISK
 #undef ARDJACK_INCLUDE_WINMEMORY
 
 
 #ifdef ARDUINO
 	#define ARDJACK_INCLUDE_ARDUINO_DHT
-	//#define ARDJACK_INCLUDE_ARDUINO_MF_SHIELD
+	#define ARDJACK_INCLUDE_ARDUINO_MF_SHIELD
 	//#define ARDJACK_INCLUDE_ARDUINO_NEOPIXEL
 	#define ARDJACK_INCLUDE_BEACONS
 	#define ARDJACK_INCLUDE_BRIDGES
@@ -68,6 +69,7 @@
 	//#define ARDJACK_INCLUDE_PERSISTENCE
 	#define ARDJACK_INCLUDE_SHIELDS
 	//#define ARDJACK_INCLUDE_TESTS
+	#define ARDJACK_INCLUDE_THINKER_SHIELD
 #else
 	#define ARDJACK_INCLUDE_BEACONS
 	#define ARDJACK_INCLUDE_BRIDGES
@@ -76,6 +78,7 @@
 	#define ARDJACK_INCLUDE_PERSISTENCE
 	#define ARDJACK_INCLUDE_SHIELDS
 	#define ARDJACK_INCLUDE_TESTS
+	#define ARDJACK_INCLUDE_THINKER_SHIELD
 	#define ARDJACK_INCLUDE_WINDISK
 	#define ARDJACK_INCLUDE_WINMEMORY
 
@@ -500,6 +503,7 @@ public:
 	static bool IncludeDataLoggers;
 	static bool IncludePersistence;
 	static bool IncludeShields;
+	static bool IncludeThinkerShield;
 	static bool IncludeWinDisk;
 	static bool IncludeWinMemory;
 	static bool InitialisedStatic;									// has static initialzation finished?
