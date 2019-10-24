@@ -131,13 +131,13 @@ bool ArduinoDevice::ApplyConfig(bool quiet)
 		// Digital Inputs.
 #ifdef ARDJACK_INCLUDE_ARDUINO_DHT
 		// Keep pin 2 for DHT.
-		AddParts("di", 5, ARDJACK_PART_TYPE_DIGITAL_INPUT, 0, 0, 3);
+		AddParts("di", 3, ARDJACK_PART_TYPE_DIGITAL_INPUT, 0, 0, 3);
 #else
-		AddParts("di", 6, ARDJACK_PART_TYPE_DIGITAL_INPUT, 0, 0, 2);
+		AddParts("di", 4, ARDJACK_PART_TYPE_DIGITAL_INPUT, 0, 0, 2);
 #endif
 
 		// Digital Outputs.
-		AddParts("do", 5, ARDJACK_PART_TYPE_DIGITAL_OUTPUT, 0, 0, 8);
+		AddParts("do", 4, ARDJACK_PART_TYPE_DIGITAL_OUTPUT, 0, 0, 6);
 
 		// LEDs.
 		AddPart("led0", ARDJACK_PART_TYPE_LED, 0, LED_BUILTIN);

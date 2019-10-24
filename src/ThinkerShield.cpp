@@ -88,8 +88,9 @@ bool ThinkerShield::CreateInventory()
 #ifdef ARDJACK_ESP32
 	//Owner->AddParts("led", 5, ARDJACK_PART_TYPE_LED, 0, 1, ?);
 #else
-	Owner->AddPart("led0", ARDJACK_PART_TYPE_LED, 0, LED_BUILTIN);
-	Owner->AddParts("led", 5, ARDJACK_PART_TYPE_LED, 0, 1, 8);
+	//Owner->AddPart("led0", ARDJACK_PART_TYPE_LED, 0, LED_BUILTIN);
+	//Owner->AddParts("led", 5, ARDJACK_PART_TYPE_LED, 0, 1, 8);
+	Owner->AddParts("led", 6, ARDJACK_PART_TYPE_LED, 0, 0, 8);
 #endif
 
 	// Light Sensor inputs.
