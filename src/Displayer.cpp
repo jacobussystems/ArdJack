@@ -881,12 +881,13 @@ bool Displayer::DisplayStatus()
 	//Log::LogInfo(PRM("  Exec prefix:          '"), Globals::ExecPrefix, "'");
 	Log::LogInfo(PRM("  IP address:           "), Globals::IpAddress);
 #ifdef ARDUINO
-	Log::LogInfo(PRM("  Log.IncludeMemory:    "), Utils::Bool2yesno(SaveLogIncludeMemory));
+	Log::LogInfo(PRM("  LogMemory:            "), Utils::Bool2yesno(SaveLogIncludeMemory));
 #endif
-	Log::LogInfo(PRM("  Log.IncludeTime:      "), Utils::Bool2yesno(SaveLogIncludeTime));
-	Log::LogInfo(PRM("  Log.Prefix:           '"), Log::Prefix, "'");
+	Log::LogInfo(PRM("  LogPrefix:            '"), Log::Prefix, "'");
+	Log::LogInfo(PRM("  LogTarget:            "), (Globals::LogTarget != NULL ? Globals::LogTarget->Name : ""));
+	Log::LogInfo(PRM("  LogTime:              "), Utils::Bool2yesno(SaveLogIncludeTime));
 #ifdef ARDUINO
-	Log::LogInfo(PRM("  Log.UseSerial:        "), Utils::Bool2yesno(Log::UseSerial));
+	//Log::LogInfo(PRM("  Log.UseSerial:        "), Utils::Bool2yesno(Log::UseSerial));
 	//Log::LogInfo(PRM("  Log.UseSerialUSB:     "), Utils::Bool2yesno(Log::UseSerialUSB));
 #endif
 	Log::LogInfo(PRM("  Network available:    "), Utils::Bool2yesno(Globals::NetworkAvailable));

@@ -714,16 +714,10 @@ bool CommandSet::command_set(const char* args)
 		return true;
 	}
 
-	char fields[4][ARDJACK_MAX_VALUE_LENGTH];
+	char fields[2][ARDJACK_MAX_VALUE_LENGTH];
 	bool handled;
 
-	int count = Utils::SplitText2Array(args, ' ', fields, 4, ARDJACK_MAX_VALUE_LENGTH);
-
-	if (count < 2)
-	{
-		Log::LogError(PRM("Insufficient fields for SET command: '"), args, "'");
-		return false;
-	}
+	int count = Utils::SplitText2Array(args, ' ', fields, 2, ARDJACK_MAX_VALUE_LENGTH);
 
 	return Globals::Set(fields[0], fields[1], &handled);
 }

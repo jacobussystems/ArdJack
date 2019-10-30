@@ -57,13 +57,10 @@ ThinkerShield::ThinkerShield(const char* name)
 bool ThinkerShield::CreateInventory()
 {
 	// Add Parts to Device 'Owner'.
-	if (!Shield::CreateInventory())
-		return false;
-
 	if (Globals::Verbosity > 3)
-		Log::LogInfo(PRM("ThinkerShield::CreateInventory"));
+		Log::LogInfoF(PRM("ThinkerShield::CreateInventory: Entry, %d Parts"), Owner->PartCount);
 
-	Owner->PartCount = 0;
+	Owner->PrepareForCreateInventory();
 
 	// Analog Inputs (ADC pins).
 	Owner->AddParts("ai", 4, ARDJACK_PART_TYPE_ANALOG_INPUT, 0, 0, A0);
@@ -102,11 +99,10 @@ bool ThinkerShield::CreateInventory()
 	// Sounds.
 	Owner->AddPart("sound0", ARDJACK_PART_TYPE_SOUND, 0, 3);
 
-	// Switches.
-	Owner->AddPart("switch0", ARDJACK_PART_TYPE_SWITCH, 0, 7);
+	Owner->RemoveOldParts();
 
 	if (Globals::Verbosity > 3)
-		Log::LogInfoF(PRM("ThinkerShield::CreateInventory: %d parts"), Owner->PartCount);
+		Log::LogInfoF(PRM("ThinkerShield::CreateInventory: Exit, %d Parts"), Owner->PartCount);
 
 	return true;
 }

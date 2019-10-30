@@ -77,7 +77,8 @@ bool ArduinoMFShield::CreateInventory()
 	if (Globals::Verbosity > 3)
 		Log::LogInfo(PRM("ArduinoMFShield::CreateInventory"));
 
-	Owner->PartCount = 0;
+	if (!Shield::CreateInventory())
+		return false;
 
 	// Analog Inputs (ADC pins).
 	//Owner->AddParts("ai", 4, ARDJACK_PART_TYPE_ANALOG_INPUT, 0, 0, A0);
@@ -108,6 +109,11 @@ bool ArduinoMFShield::CreateInventory()
 
 	// 4 x 7-segment text display.
 	Owner->AddPart("text0", ARDJACK_PART_TYPE_TEXT_DISPLAY, 0, 0);
+
+	Shield::RemoveOldParts();
+
+	if (Globals::Verbosity > 3)
+		Log::LogInfoF(PRM("ArduinoMFShield::CreateInventory: %d parts"), Owner->PartCount);
 
 	return true;
 }

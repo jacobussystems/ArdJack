@@ -48,9 +48,10 @@ public:
 	Configuration* Config;
 	Filter* Filt;
 	char FilterName[ARDJACK_MAX_NAME_LENGTH];
+	bool IsNew;
 	uint8_t ItemCount;
 #ifdef ARDJACK_INCLUDE_MULTI_PARTS
-	Part* Items[ARDJACK_MAX_MULTI_PART_ITEMS];								// array of 'Part'
+	Part* Items[ARDJACK_MAX_MULTI_PART_ITEMS];							// array of 'Part'
 #endif
 	bool LastChangeState;												// last change state, for debounce filtering
 	int LastChangeTime;													// last change time (ms), for debounce filtering

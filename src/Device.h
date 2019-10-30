@@ -107,13 +107,16 @@ public:
 	virtual bool GetPartsOfType(int partType, Part* parts[], uint8_t* count);
 	static int LookupOperation(const char* name);
 	virtual Part* LookupPart(const char* name, bool quiet = false);
+	virtual Part* LookupPart(const char* name, int type, int subtype, bool quiet = false);
 	virtual bool LookupParts(const char* names, Part* parts[], uint8_t* count);
 	virtual bool Open();
 	virtual bool Poll() override;
+	virtual bool PrepareForCreateInventory();
 	virtual bool Read(Part* part, Dynamic* value);
 #ifdef ARDJACK_INCLUDE_MULTI_PARTS
 	virtual bool ReadMulti(Part* part, char* value);
 #endif
+	virtual bool RemoveOldParts();
 	virtual bool ScanInputs(bool* changes, int count, int delayMs);
 	virtual bool ScanInputsOnce(bool* changes);
 	//virtual bool Send(int oper, int partType, int index, char values[][ARDJACK_MAX_VALUE_LENGTH]);

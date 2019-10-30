@@ -88,38 +88,38 @@
 
 // Global limits / constants.
 
-#define ARDJACK_MAX_COMMAND_BUFFER_ITEM_LENGTH 100					// max.no.of characters in a command
-#define ARDJACK_MAX_COMMAND_BUFFER_ITEMS 10							// max.items in a command buffer
-#define ARDJACK_MAX_COMMAND_LENGTH 110								// max.characters in a command
-#define ARDJACK_MAX_COMMAND_SETS 1									// max.no.of CommandSets
-#define ARDJACK_MAX_COMMANDS 24										// max.no.of commands
-#define ARDJACK_MAX_CONFIG_PROPERTIES 30							// max.no.of items in a Configuration
-#define ARDJACK_MAX_CONFIG_VALUE_LENGTH 40							// max.characters in a ConfigProp string
-#define ARDJACK_MAX_CONNECTION_OUTPUT_BUFFER_ITEM_LENGTH 200		// max.characters in a Connection o/p buffer item
-#define ARDJACK_MAX_CONNECTION_OUTPUT_BUFFER_ITEMS 10				// max.items in the Connection o/p buffer
+#define ARDJACK_MAX_COMMAND_BUFFER_ITEM_LENGTH 100						// max.no.of characters in a command
+#define ARDJACK_MAX_COMMAND_BUFFER_ITEMS 10								// max.items in a command buffer
+#define ARDJACK_MAX_COMMAND_LENGTH 110									// max.characters in a command
+#define ARDJACK_MAX_COMMAND_SETS 1										// max.no.of CommandSets
+#define ARDJACK_MAX_COMMANDS 24											// max.no.of commands
+#define ARDJACK_MAX_CONFIG_PROPERTIES 30								// max.no.of items in a Configuration
+#define ARDJACK_MAX_CONFIG_VALUE_LENGTH 40								// max.characters in a ConfigProp string
+#define ARDJACK_MAX_CONNECTION_OUTPUT_BUFFER_ITEM_LENGTH 200			// max.characters in a Connection o/p buffer item
+#define ARDJACK_MAX_CONNECTION_OUTPUT_BUFFER_ITEMS 10					// max.items in the Connection o/p buffer
 #define ARDJACK_MAX_DATALOGGER_PARTS 10
-#define ARDJACK_MAX_DESCRIPTION_LENGTH 60							// max.characters in a description
-#define ARDJACK_MAX_DEVICE_BUFFER_ITEMS 10							// max.items in a device buffer
+#define ARDJACK_MAX_DESCRIPTION_LENGTH 60								// max.characters in a description
+#define ARDJACK_MAX_DEVICE_BUFFER_ITEMS 10								// max.items in a device buffer
 #define ARDJACK_MAX_DICTIONARY_ITEMS 6
 #define ARDJACK_MAX_DICTIONARY_KEY_LENGTH 10
 #define ARDJACK_MAX_DICTIONARY_VALUE_LENGTH 20
 #define ARDJACK_MAX_DYNAMIC_STRING_LENGTH 20
-#define ARDJACK_MAX_ENUMERATION_ITEM_LENGTH 20						// max.characters in an Enumeration item
-#define ARDJACK_MAX_ENUMERATION_ITEMS 60							// max.no.of items in an Enumeration
+#define ARDJACK_MAX_ENUMERATION_ITEM_LENGTH 20							// max.characters in an Enumeration item
+#define ARDJACK_MAX_ENUMERATION_ITEMS 60								// max.no.of items in an Enumeration
 #define ARDJACK_MAX_INPUT_ROUTES 4
 // TEMPORARY:
 #define ARDJACK_MAX_LOG_BUFFER_ITEM_LENGTH 4
 #define ARDJACK_MAX_LOG_BUFFER_ITEMS 1
-#define ARDJACK_MAX_MACRO_LENGTH 100								// max.characters in a Macro
-#define ARDJACK_MAX_MACROS 30										// max.no.of Macros
-#define ARDJACK_MAX_MESSAGE_PATH_LENGTH 30							// max.characters in an IoTMessage path
-#define ARDJACK_MAX_MESSAGE_TEXT_LENGTH 160							// max.characters in IoTMessage 'Text'
-#define ARDJACK_MAX_MESSAGE_WIRETEXT_LENGTH 220						// max.characters in IoTMessage 'WireText'
-#define ARDJACK_MAX_MULTI_PART_ITEMS 1								// max.no.of Items in a 'Multi' Part
-#define ARDJACK_MAX_NAME_LENGTH 32									// max.characters in a name
-#define ARDJACK_MAX_OBJECTS 20										// max.no.of Objects in Register
-#define ARDJACK_MAX_PART_VALUE_LENGTH 10							// max.characters in a Part's value
-#define ARDJACK_MAX_PARTS 30										// max.no.of Parts
+#define ARDJACK_MAX_MACRO_LENGTH 100									// max.characters in a Macro
+#define ARDJACK_MAX_MACROS 30											// max.no.of Macros
+#define ARDJACK_MAX_MESSAGE_PATH_LENGTH 30								// max.characters in an IoTMessage path
+#define ARDJACK_MAX_MESSAGE_TEXT_LENGTH 160								// max.characters in IoTMessage 'Text'
+#define ARDJACK_MAX_MESSAGE_WIRETEXT_LENGTH 220							// max.characters in IoTMessage 'WireText'
+#define ARDJACK_MAX_MULTI_PART_ITEMS 1									// max.no.of Items in a 'Multi' Part
+#define ARDJACK_MAX_NAME_LENGTH 32										// max.characters in a name
+#define ARDJACK_MAX_OBJECTS 20											// max.no.of Objects in Register
+#define ARDJACK_MAX_PART_VALUE_LENGTH 10								// max.characters in a Part's value
+#define ARDJACK_MAX_PARTS 34											// max.no.of Parts
 #define ARDJACK_MAX_PERSISTED_FILES 2
 #define ARDJACK_MAX_PERSISTED_LINES 40
 #define ARDJACK_MAX_TABLE_COLUMNS 10

@@ -19,6 +19,13 @@ namespace UnitTest1
 			Log::InUnitTest = true;
 		}
 
+
+		static void WriteLog2(const char* text)
+		{
+			Logger::WriteMessage(text);
+			Logger::WriteMessage("\n");
+		}
+
 	};
 }
 

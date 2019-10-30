@@ -617,12 +617,20 @@ bool Globals::Set(const char* name, const char* value, bool* handled)
 	if (Utils::StringEquals(useName, PRM("LOGMEMORY"), false))
 	{
 		Log::IncludeMemory = Utils::String2Bool(value, Log::IncludeMemory);
+
+		if (Globals::Verbosity > 2)
+			Log::LogInfoF(PRM("LOGMEMORY set to '%s'"), Utils::Bool2yesno(Log::IncludeMemory));
+
 		return true;
 	}
 
 	if (Utils::StringEquals(useName, PRM("LOGPREFIX"), false))
 	{
 		strcpy(Log::Prefix, value);
+
+		if (Globals::Verbosity > 2)
+			Log::LogInfoF(PRM("LOGPREFIX set to '%s'"), Log::Prefix);
+
 		return true;
 	}
 
@@ -638,27 +646,34 @@ bool Globals::Set(const char* name, const char* value, bool* handled)
 		return true;
 	}
 
-	if (Utils::StringEquals(useName, PRM("LOGTIME"), false))
+	if (Utils::StringEquals(useName, PRM("LOGTARGET"), false))
 	{
-		Log::IncludeTime = Utils::String2Bool(value, Log::IncludeTime);
+		if ((NULL == value) || (strlen(value) == 0))
+		{
+			Globals::LogTarget = NULL;
+			Log::LogInfo(PRM("LOGTARGET cleared"));
+			return true;
+		}
+
+		Globals::LogTarget = Globals::ConnectionMgr->LookupConnection(value);
+
+		if (Globals::Verbosity > 2)
+		{
+			if (NULL == Globals::LogTarget)
+				Log::LogInfo(PRM("LOGTARGET cleared"));
+			else
+				Log::LogInfoF(PRM("LOGTARGET set to '%s'"), Globals::LogTarget->Name);
+		}
+
 		return true;
 	}
 
-	if (Utils::StringEquals(useName, PRM("LOGTO"), false))
+	if (Utils::StringEquals(useName, PRM("LOGTIME"), false))
 	{
-		Globals::LogTarget = Globals::ConnectionMgr->LookupConnection(value);
+		Log::IncludeTime = Utils::String2Bool(value, Log::IncludeTime);
 
-		if (Globals::Verbosity > 3)
-		{
-			char temp[220];
-
-			if (NULL == Globals::LogTarget)
-				sprintf(temp, PRM("LOGTO set to (null)"));
-			else
-				sprintf(temp, PRM("LOGTO set to '%s'"), Globals::LogTarget->Name);
-
-			Log::LogInfo(temp);
-		}
+		if (Globals::Verbosity > 2)
+			Log::LogInfoF(PRM("LOGTIME set to '%s'"), Utils::Bool2yesno(Log::IncludeTime));
 
 		return true;
 	}
@@ -687,7 +702,7 @@ bool Globals::Set(const char* name, const char* value, bool* handled)
 	{
 		Globals::Verbosity = Utils::String2Int(value, Globals::Verbosity);
 
-		if (Globals::Verbosity > 3)
+		if (Globals::Verbosity > 2)
 			Log::LogInfoF(PRM("VERBOSITY set to %d"), Globals::Verbosity);
 
 		return true;

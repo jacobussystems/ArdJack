@@ -56,7 +56,10 @@ bool Shield::CreateInventory()
 	if (NULL == Owner)
 		return false;
 
-	return Owner->ClearInventory();
+	if (Globals::Verbosity > 3)
+		Log::LogInfo(PRM("Shield::CreateInventory"));
+
+	return true;
 }
 
 

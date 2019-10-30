@@ -183,13 +183,10 @@ Part* PartManager::CreatePart(const char* name, int type, int subtype)
 	else
 		result = CreateUserPart(name, type, subtype);
 
-	char temp[202];
-
 	if (NULL == result)
 	{
-		sprintf(temp, PRM("Unable to create Part '%s' (type '%s', subtype '%s')"),
+		Log::LogErrorF(PRM("Unable to create Part '%s' (type '%s', subtype '%s')"),
 			name, PartTypeName(type), PartSubtypeName(subtype));
-		Log::LogError(temp);
 		return NULL;
 	}
 
@@ -201,13 +198,11 @@ Part* PartManager::CreatePart(const char* name, int type, int subtype)
 	{
 		if (type == ARDJACK_PART_TYPE_USER)
 		{
-			sprintf(temp, PRM("Created UserPart '%s' (type '%s', subtype '%s')"),
+			Log::LogInfoF(PRM("Created UserPart '%s' (type '%s', subtype '%s')"),
 				result->Name, PartTypeName(type), PartSubtypeName(subtype));
 		}
 		else
-			sprintf(temp, PRM("Created Part '%s' (type '%s')"), result->Name, PartTypeName(type));
-
-		Log::LogInfo(temp);
+			Log::LogInfoF(PRM("Created Part '%s' (type '%s')"), result->Name, PartTypeName(type));
 	}
 
 	return result;

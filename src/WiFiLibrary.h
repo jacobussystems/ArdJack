@@ -41,7 +41,7 @@
 //--------------------------------------------------------------------------------------------------------------------------
 
 // FOR VISUAL STUDIO + VISUAL MICRO, YOU NEED TO COMMENT/UNCOMMENT THE FOLLOWING THREE #includes TO MATCH THE BOARD IN USE.
-// Tried using the ArdJack conditionals, but weird errors when compiling in Visual Studio + Visual Micro.
+// We tried using the ArdJack conditionals, but got weird errors when compiling in Visual Studio + Visual Micro.
 //		- Comment all 3 #includes for Arduino Due.
 //		- Repeat this in Ardjack.ino.
 

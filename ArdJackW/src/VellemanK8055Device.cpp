@@ -88,25 +88,25 @@ bool VellemanK8055Device::CreateDefaultInventory()
 	for (int i = 0; i < 2; i++)
 	{
 		sprintf(temp, "ai%d", i);
-		AddPart(temp, ARDJACK_PART_TYPE_ANALOG_INPUT, i, i + 1);
+		AddPart(temp, ARDJACK_PART_TYPE_ANALOG_INPUT, 0, i + 1);
 	}
 
 	for (int i = 0; i < 2; i++)
 	{
 		sprintf(temp, "ao%d", i);
-		AddPart(temp, ARDJACK_PART_TYPE_ANALOG_OUTPUT, i, i + 1);
+		AddPart(temp, ARDJACK_PART_TYPE_ANALOG_OUTPUT, 0, i + 1);
 	}
 
 	for (int i = 0; i < 8; i++)
 	{
 		sprintf(temp, "led%d", i);
-		AddPart(temp, ARDJACK_PART_TYPE_LED, i, i + 1);
+		AddPart(temp, ARDJACK_PART_TYPE_LED, 0, i + 1);
 	}
 
 	for (int i = 0; i < 5; i++)
 	{
 		sprintf(temp, "button%d", i);
-		AddPart(temp, ARDJACK_PART_TYPE_BUTTON, i, i + 1);
+		AddPart(temp, ARDJACK_PART_TYPE_BUTTON, 0, i + 1);
 	}
 
 	return true;

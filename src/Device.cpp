@@ -146,24 +146,34 @@ bool Device::AddConfig()
 
 Part* Device::AddPart(const char* name, int type, int subtype, int pin)
 {
-	Part* result = Parts[PartCount];
+	// Is there an existing Part 'name' with the same Type and (for UserParts) Subtype?
+	Part* result = LookupPart(name, type, subtype, true);
 
-	if (NULL == result)
+	if (NULL != result)
 	{
+		// Yes - reuse the old Part.
+		if (Globals::Verbosity > 4)
+			Log::LogInfoF(PRM("Device::AddPart: %s: Reusing Part '%s' (type %d, subtype %d)"), Name, name, type, subtype);
+
+		result->IsNew = true;
+		result->Pin = pin;
+		result->Subtype = subtype;
+	}
+	else
+	{
+		// No - create a new Part.
 		result = Globals::PartMgr->CreatePart(name, type, subtype);
 		if (NULL == result) return NULL;
 
-		Parts[PartCount] = result;
+		Parts[PartCount++] = result;
+
+		strcpy(result->Name, name);
+		result->Pin = pin;
+		result->Subtype = subtype;
+		result->Type = type;
+
+		result->AddConfig();
 	}
-
-	PartCount++;
-
-	strcpy(result->Name, name);
-	result->Pin = pin;
-	result->Subtype = subtype;
-	result->Type = type;
-
-	result->AddConfig();
 
 	return result;
 }
@@ -283,18 +293,18 @@ bool Device::CheckInput(Part* part, bool* change)
 bool Device::ClearInventory()
 {
 	if (Globals::Verbosity > 3)
-		Log::LogInfoF(PRM("Device::ClearInventory: '%s'"), Name);
+		Log::LogInfoF(PRM("Device::ClearInventory: '%s', %d Parts"), Name, PartCount);
 
-	for (int i = 0; i < ARDJACK_MAX_PARTS; i++)
+	for (int i = 0; i < PartCount; i++)
 	{
 		if (NULL != Parts[i])
-		{
 			delete Parts[i];
-			Parts[i] = NULL;
-		}
 	}
 
 	PartCount = 0;
+
+	for (int i = 0; i < ARDJACK_MAX_PARTS; i++)
+		Parts[i] = NULL;
 
 	return true;
 }
@@ -392,9 +402,15 @@ bool Device::ConfigureForShield()
 			Globals::ObjectRegister->DeleteObject(DeviceShield);
 			DeviceShield = NULL;
 
-			// We've removed an active Shield, so we need to reset this Device's inventory.
-			ClearInventory();
-			CreateDefaultInventory();
+			// We've removed an active Shield.
+			if (!useShield)
+			{
+				// We're not going to use a Shield now, so reset the inventory.
+				if (Globals::Verbosity > 3)
+					Log::LogInfoF(PRM("Device::ConfigureForShield: '%s', resetting inventory"), Name);
+
+				return CreateDefaultInventory();
+			}
 		}
 	}
 
@@ -433,6 +449,9 @@ bool Device::ConfigureParts(const char* partExpr, StringList* settings, int star
 	if (count == 0)
 		return true;
 
+	if (Globals::Verbosity > 3)
+		Log::LogInfoF(PRM("Device::ConfigureParts: '%s', partExpr '%s'"), Name, partExpr);
+
 	Part* parts[ARDJACK_MAX_PARTS];
 	uint8_t partCount;
 
@@ -447,12 +466,9 @@ bool Device::ConfigureParts(const char* partExpr, StringList* settings, int star
 	// Deactivate - Configure - Activate.
 	bool wasActive = Active();
 
-	if (Active())
-	{
-		// Deactivate the Device.
-		if (!Deactivate())
-			return false;
-	}
+	// Deactivate the Device?
+	if (!SetActive(false))
+		return false;
 
 	for (int i = 0; i < partCount; i++)
 	{
@@ -460,12 +476,9 @@ bool Device::ConfigureParts(const char* partExpr, StringList* settings, int star
 			break;
 	}
 
-	if (wasActive)
-	{
-		// Reactivate the Device.
-		if (!Activate())
-			return false;
-	}
+	// Reactivate the Device?
+	if (!SetActive(wasActive))
+		return false;
 
 	return true;
 }
@@ -831,6 +844,48 @@ Part* Device::LookupPart(const char* name, bool quiet)
 }
 
 
+Part* Device::LookupPart(const char* name, int type, int subtype, bool quiet)
+{
+	// Is there a Part called 'name', with type 'type' and (for UserParts) subtype 'subtype'?
+	// If yes, returns it.
+	// If no, removes any Part called 'name'.
+
+	Part* result = NULL;
+
+	// Copy the Parts info.
+	int oldPartCount = PartCount;
+	Part* oldParts[ARDJACK_MAX_PARTS];
+
+	for (int i = 0; i < oldPartCount; i++)
+		oldParts[i] = Parts[i];
+
+	// Rebuild the Parts info.
+	PartCount = 0;
+
+	for (int i = 0; i < oldPartCount; i++)
+	{
+		Part* part = Parts[i];
+		bool copy = true;
+
+		if (Utils::StringEquals(part->Name, name))
+		{
+			if ((part->Type == type) && ((part->Type != ARDJACK_PART_TYPE_USER) || (part->Subtype == subtype)))
+				result = part;
+			else
+				copy = false;
+		}
+
+		if (copy)
+			Parts[PartCount++] = part;
+	}
+
+	if ((NULL == result) && !quiet)
+		Log::LogErrorF(PRM("LookupPart: Device '%s' has no Part '%s'"), Name, name);
+
+	return result;
+}
+
+
 bool Device::LookupParts(const char* names, Part* parts[], uint8_t* count)
 {
 	// From a space-separated list of part names in 'names', populate 'parts' with the Parts, and 'count' with the count.
@@ -927,6 +982,25 @@ bool Device::PollOutputs()
 }
 
 
+bool Device::PrepareForCreateInventory()
+{
+	// Prepare to add Parts to this Device.
+	// N.B. Don't clear the existing Parts, as we may be able to reuse them and keep their configuration, e.g. Filters.
+
+	if (Globals::Verbosity > 3)
+		Log::LogInfoF(PRM("Device::PrepareForCreateInventory: '%s', %d existing Parts"), Name, PartCount);
+
+	// Mark the existing Parts.
+	for (int i = 0; i < PartCount; i++)
+	{
+		Part* part = Parts[i];
+		part->IsNew = false;
+	}
+
+	return true;
+}
+
+
 bool Device::Read(Part* part, Dynamic* value)
 {
 	value->Clear();
@@ -986,6 +1060,39 @@ bool Device::Read(Part* part, Dynamic* value)
 	}
 
 #endif
+
+
+bool Device::RemoveOldParts()
+{
+	// Remove and delete any Parts that don't have 'IsNew' set.
+	if (Globals::Verbosity > 5)
+		Log::LogInfoF(PRM("Device::RemoveOldParts: '%s': Entry, %d Parts"), Name, PartCount);
+
+	// Copy the Parts info.
+	Part* startParts[ARDJACK_MAX_PARTS];
+
+	for (int i = 0; i < PartCount; i++)
+		startParts[i] = Parts[i];
+
+	// Rebuild the Parts info.
+	int startPartCount = PartCount;
+	PartCount = 0;
+
+	for (int i = 0; i < startPartCount; i++)
+	{
+		Part* part = startParts[i];
+
+		if (part->IsNew)
+			Parts[PartCount++] = part;
+		else
+			delete part;
+	}
+
+	if (Globals::Verbosity > 5)
+		Log::LogInfoF(PRM("Device::RemoveOldParts: '%s': Exit, %d Parts"), Name, PartCount);
+
+	return true;
+}
 
 
 bool Device::ScanInputs(bool *changes, int count, int delay_ms)

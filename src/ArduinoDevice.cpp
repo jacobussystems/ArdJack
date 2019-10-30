@@ -370,7 +370,10 @@ bool ArduinoDevice::CreateDefaultInventory()
 	
 	// If a Shield is removed, this method needs to be called to re-establish the boards' configuration.
 
-	PartCount = 0;
+	if (Globals::Verbosity > 3)
+		Log::LogInfoF(PRM("ArduinoDevice::CreateDefaultInventory: '%s': Entry, %d Parts"), Name, PartCount);
+
+	PrepareForCreateInventory();
 
 #ifdef ARDJACK_ARDUINO_DUE
 	ConfigureDUE();
@@ -399,6 +402,11 @@ bool ArduinoDevice::CreateDefaultInventory()
 #ifdef ARDJACK_FEATHER_M0
 	ConfigureFeatherM0();
 #endif
+
+	RemoveOldParts();
+
+	if (Globals::Verbosity > 3)
+		Log::LogInfoF(PRM("ArduinoDevice::CreateDefaultInventory: '%s': Exit, %d Parts"), Name, PartCount);
 
 	return true;
 }

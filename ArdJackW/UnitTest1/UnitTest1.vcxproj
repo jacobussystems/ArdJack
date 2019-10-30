@@ -241,6 +241,7 @@
     </ClCompile>
     <ClCompile Include="Test_Dictionary.cpp" />
     <ClCompile Include="Test_Enumeration.cpp" />
+    <ClCompile Include="Test_Shield.cpp" />
     <ClCompile Include="Test_StringList2.cpp" />
     <ClCompile Include="Test_UrlEncoder.cpp" />
     <ClCompile Include="Test_Utils_SplitText2Array.cpp" />

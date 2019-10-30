@@ -138,11 +138,8 @@ bool IoTObject::Configure(const char* partExpr, StringList* settings, int start,
 	}
 
 	// Restore the previous Active state.
-	if (wasActive)
-	{
-		if (!SetActive(true))
-			return false;
-	}
+	if (!SetActive(wasActive))
+		return false;
 
 	return true;
 }

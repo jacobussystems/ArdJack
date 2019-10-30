@@ -11,14 +11,6 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 #include "Utils.h"
 
 
-void WriteLog2(const char* text)
-{
-	Logger::WriteMessage(text);
-	Logger::WriteMessage("\n");
-}
-
-
-
 
 namespace UnitTest1
 {
@@ -27,7 +19,7 @@ namespace UnitTest1
 	public:
 		TEST_CLASS_INITIALIZE(InitForAllTests)
 		{
-			// Do something exactly one time for all tests in this class.
+			// Do something exactly once for all tests in this class.
 			// This is run before the first test starts.
 
 			WriteLog2("--- TEST_CLASS_INITIALIZE(InitForAllTests) ---");
@@ -359,6 +351,13 @@ namespace UnitTest1
 				sprintf(temp, "Item %d", i);
 				Assert::IsTrue(Utils::StringEquals(temp, sl1.Get(i), false));
 			}
+		}
+
+
+		static void WriteLog2(const char* text)
+		{
+			Logger::WriteMessage(text);
+			Logger::WriteMessage("\n");
 		}
 
 	};

@@ -47,6 +47,7 @@ Part::Part()
 	Config = NULL;
 	Filt = NULL;
 	FilterName[0] = NULL;
+	IsNew = true;
 	ItemCount = 0;
 	LastChangeTime = 0;
 	Name[0] = NULL;
