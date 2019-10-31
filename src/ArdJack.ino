@@ -82,7 +82,6 @@
   #include "Tests.h"
 #endif
 
-//#include "UdpConnection.h"
 #include "Utils.h"
 
 #ifdef ARDJACK_FLASH_AVAILABLE
@@ -431,7 +430,7 @@ bool StartupCommands();
 
 		// Setup a signal filter.
 		Globals::Interpreter->Execute(PRM("add filter filter0"));
-		Globals::Interpreter->Execute(PRM("configure ard.ai filter=filter0"));
+		Globals::Interpreter->Execute(PRM("configure ard.allanalogin filter=filter0"));
 		Globals::Interpreter->Execute(PRM("configure filter0 mindiff=100"));
 		//Globals::Interpreter->Execute(PRM("device ard subscribe ai"));
 

@@ -53,7 +53,7 @@ Part::Part()
 	Name[0] = NULL;
 	NotifiedTime = 0;
 	NotifiedValue.Clear();
-	Notify = false;
+	Notifying = false;
 	Pin = 0;
 	Subtype = ARDJACK_USERPART_SUBTYPE_NONE;
 	Type = ARDJACK_PART_TYPE_NONE;
@@ -130,19 +130,19 @@ bool Part::CheckChange()
 	// Check for a change (the new value is already in 'Value').
 	bool result = false;
 
-	if (Globals::Verbosity > 5)
+	if (Globals::Verbosity > 6)
 	{
 		char temp[10];
 		char temp2[10];
 
 		if (IsDigitalInput())
 		{
-			Log::LogInfoF(PRM("'%s', Value '%s', nv '%s', lcs %d"),
+			Log::LogInfoF(PRM("Part::CheckChange: '%s', Value '%s', NotifiedValue '%s', lcs %d"),
 				Name, Value.AsString(temp), NotifiedValue.AsString(temp2), LastChangeState);
 		}
 		else
 		{
-			Log::LogInfoF(PRM("'%s', Value '%s', nv '%s'"),
+			Log::LogInfoF(PRM("Part::CheckChange: '%s', Value '%s', NotifiedValue '%s'"),
 				Name, Value.AsString(temp), NotifiedValue.AsString(temp2));
 		}
 	}
@@ -169,13 +169,13 @@ bool Part::CheckChange()
 }
 
 
-bool Part::Configure(StringList* settings, int start, int count)
+bool Part::Configure(Device* dev, StringList* settings, int start, int count)
 {
 	if (count == 0)
 		return true;
 
+	bool configured = false;
 	StringList fields;
-
 	char itemName[ARDJACK_MAX_NAME_LENGTH];
 	char itemValue[100];
 	char temp[102];
@@ -191,12 +191,14 @@ bool Part::Configure(StringList* settings, int start, int count)
 		if (Utils::StringEquals(itemName, "Filter"))
 		{
 			strcpy(FilterName, itemValue);
+			configured = true;
 			continue;
 		}
 
 		if (Utils::StringEquals(itemName, "Pin"))
 		{
 			Pin = Utils::String2Int(itemValue, Pin);
+			configured = true;
 			continue;
 		}
 
@@ -213,12 +215,19 @@ bool Part::Configure(StringList* settings, int start, int count)
 				if (Utils::StringEquals(itemName, "Items"))
 					ConfigureMulti(itemValue);
 #endif
+				configured = true;
 				continue;
 			}
 		}
 
 		sprintf(temp, PRM("invalid Configuration item for Part '%s': '%s'"), Name, itemName);
 		Log::LogError(temp);
+	}
+
+	if (configured)
+	{
+		// Signal that the configuration of this Part has changed.
+		dev->SignalChange_Configuration(this);
 	}
 
 	return true;
@@ -322,6 +331,24 @@ bool Part::IsOutput()
 bool Part::IsTextual()
 {
 	return Globals::PartMgr->IsTextualType(Type);
+}
+
+
+bool Part::Poll()
+{
+	// Do we need to notify a value change?
+
+	// We use a Filter's 'MaxInterval' to allow monitors etc. to 'catch up' if there's been no significant value
+	// change since the last notified change.
+	// Calling it from here means that it's regularly checked, so we don't have to wait for value changes
+	// (which could be 'forever').
+
+	if (CheckChange())
+	{
+
+	}
+
+	return true;
 }
 
 

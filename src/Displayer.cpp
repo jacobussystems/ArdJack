@@ -304,13 +304,13 @@ bool Displayer::DisplayDevice(Device* dev)
 	Log::LogInfoF(PRM("%d Parts:"), dev->PartCount);
 
 	Table table;
-	table.AddColumn("Part", 18);
+	table.AddColumn("Part", 14);
 	table.AddColumn("Type", 10);
-	table.AddColumn("Subtype", 12);
+	table.AddColumn("Subtype", 10);
 	table.AddColumn("Pin", 6);
-	table.AddColumn("Value", 18);
+	table.AddColumn("Value", 10);
 	table.AddColumn("Notifying?", 12);
-	table.AddColumn("Filter", 18);
+	table.AddColumn("Filter", 16);
 
 	char line[202];
 	Log::LogInfo(table.HorizontalLine(line));
@@ -334,7 +334,7 @@ bool Displayer::DisplayDevice(Device* dev)
 		part->Value.AsString(strValue);
 
 		Log::LogInfo(table.Row(line, part->Name, Globals::PartMgr->PartTypeName(part->Type), subtypeName,
-			itoa(part->Pin, pin, 10), strValue, Utils::Bool2yesno(part->Notify, notify), part->FilterName));
+			itoa(part->Pin, pin, 10), strValue, Utils::Bool2yesno(part->Notifying, notify), part->FilterName));
 	}
 
 	Log::LogInfo(table.HorizontalLine(line));

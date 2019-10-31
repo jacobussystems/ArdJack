@@ -58,7 +58,7 @@ public:
 	char Name[ARDJACK_MAX_NAME_LENGTH];
 	int NotifiedTime;													// last notified time (ms)
 	Dynamic NotifiedValue;												// last notified value
-	bool Notify;														// send a notification when this Part's value changes?
+	bool Notifying;														// send a notification when this Part's value changes?
 	uint8_t Pin;														// pin / GPIO channel / channel etc.
 	uint8_t Subtype;
 	uint8_t Type;
@@ -70,7 +70,7 @@ public:
 	virtual bool Activate();
 	virtual bool AddConfig();
 	virtual bool CheckChange();
-	virtual bool Configure(StringList* settings, int start, int count);
+	virtual bool Configure(Device* dev, StringList* settings, int start, int count);
 #ifdef ARDJACK_INCLUDE_MULTI_PARTS
 	virtual bool ConfigureMulti(const char* text);
 #endif
@@ -85,6 +85,7 @@ public:
 	virtual bool IsInput();
 	virtual bool IsOutput();
 	virtual bool IsTextual();
+	virtual bool Poll();
 	virtual bool Read(Dynamic* value);
 	virtual bool Write(Dynamic* value);
 };

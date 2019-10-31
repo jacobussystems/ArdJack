@@ -213,6 +213,13 @@ bool DeviceCodec1::EncodeResponse(char *response, int oper, const char* aName, c
 			strcat(response, text);
 			break;
 
+		case ARDJACK_OPERATION_CONFIGUREPART:
+		case ARDJACK_OPERATION_GET_PART_CONFIG:
+			strcat(response, aName);
+			strcat(response, ".config ");
+			strcat(response, text);
+			break;
+
 		case ARDJACK_OPERATION_ERROR:
 			strcat(response, "ERROR ");
 			strcat(response, text);
@@ -226,12 +233,6 @@ bool DeviceCodec1::EncodeResponse(char *response, int oper, const char* aName, c
 
 		case ARDJACK_OPERATION_GET_INFO:
 			strcat(response, "info ");
-			strcat(response, text);
-			break;
-
-		case ARDJACK_OPERATION_GET_PART_CONFIG:
-			strcat(response, aName);
-			strcat(response, ".config ");
 			strcat(response, text);
 			break;
 

@@ -269,7 +269,7 @@ bool Device::CheckInput(Part* part, bool* change)
 	// Read input 'part' and check for a change, notifying if required.
 	*change = false;
 
-	if (!part->Notify)
+	if (!part->Notifying)
 		return true;
 		
 	if (!part->IsInput())
@@ -283,7 +283,7 @@ bool Device::CheckInput(Part* part, bool* change)
 	if (part->CheckChange())
 	{
 		*change = true;
-		SignalChange(part);
+		SignalChange_Value(part);
 	}
 
 	return true;
@@ -472,7 +472,7 @@ bool Device::ConfigureParts(const char* partExpr, StringList* settings, int star
 
 	for (int i = 0; i < partCount; i++)
 	{
-		if (!parts[i]->Configure(settings, start, count))
+		if (!parts[i]->Configure(this, settings, start, count))
 			break;
 	}
 
@@ -962,6 +962,7 @@ bool Device::Poll()
 
 	PollInputs();
 	PollOutputs();
+	PollParts();
 
 	return true;
 }
@@ -971,12 +972,29 @@ bool Device::PollInputs()
 {
 	bool changes;
 
-	return ScanInputsOnce(&changes);
+	return ScanInputsOnce(&changes, true);
 }
 
 
 bool Device::PollOutputs()
 {
+
+	return true;
+}
+
+
+bool Device::PollParts()
+{
+	if (Globals::Verbosity > 6)
+		Log::LogInfo(Name);
+
+	for (int i = 0; i < PartCount; i++)
+	{
+		Part* part = Parts[i];
+
+		if (part->Notifying)
+			part->Poll();
+	}
 
 	return true;
 }
@@ -1123,7 +1141,7 @@ bool Device::ScanInputs(bool *changes, int count, int delay_ms)
 }
 
 
-bool Device::ScanInputsOnce(bool *changes)
+bool Device::ScanInputsOnce(bool *changes, bool signal)
 {
 	// Scan input Parts, storing the latest values in the Parts and setting 'changes' if anything has changed.
 	*changes = false;
@@ -1136,7 +1154,7 @@ bool Device::ScanInputsOnce(bool *changes)
 		Part *part = Parts[i];
 		changeList[i] = false;
 
-		if (part->Notify)
+		if (part->Notifying)
 		{
 			CheckInput(part, &change);
 
@@ -1144,6 +1162,9 @@ bool Device::ScanInputsOnce(bool *changes)
 			{
 				*changes = true;
 				changeList[i] = true;
+
+				//if (signal)
+				//	SignalChange_Value(part);
 			}
 		}
 	}
@@ -1288,7 +1309,7 @@ bool Device::SendResponse(int oper, const char* aName, const char* text)
 bool Device::SetNotify(Part* part, bool state)
 {
 	// If 'state', send notifications when 'part' changes value.
-	part->Notify = state;
+	part->Notifying = state;
 
 	if (Globals::Verbosity > 3)
 		Log::LogInfoF(PRM("SetNotify: '%s', Part '%s' -> state %d"), Name, part->Name, state);
@@ -1305,7 +1326,7 @@ bool Device::SetNotify(int partType, bool state)
 		Part* part = Parts[i];
 
 		if (part->Type == partType)
-			part->Notify = state;
+			part->Notifying = state;
 	}
 
 	if (Globals::Verbosity > 2)
@@ -1315,7 +1336,17 @@ bool Device::SetNotify(int partType, bool state)
 }
 
 
-bool Device::SignalChange(Part* part)
+bool Device::SignalChange_Configuration(Part* part)
+{
+	// Send a notification that the configuration of 'part' has changed.
+	char temp[200];
+	part->GetConfigStr(temp);
+
+	return SendResponse(ARDJACK_OPERATION_CONFIGUREPART, part->Name, temp);
+}
+
+
+bool Device::SignalChange_Value(Part* part)
 {
 	// Send a notification that the value of 'part' has changed.
 	char temp[ARDJACK_MAX_DYNAMIC_STRING_LENGTH];

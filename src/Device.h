@@ -68,6 +68,7 @@ protected:
 	virtual bool OpenParts();
 	virtual bool PollInputs();
 	virtual bool PollOutputs();
+	virtual bool PollParts();
 	virtual bool ValidateConfig(bool quiet = false) override;
 
 public:
@@ -118,11 +119,12 @@ public:
 #endif
 	virtual bool RemoveOldParts();
 	virtual bool ScanInputs(bool* changes, int count, int delayMs);
-	virtual bool ScanInputsOnce(bool* changes);
+	virtual bool ScanInputsOnce(bool* changes, bool signal = false);
 	//virtual bool Send(int oper, int partType, int index, char values[][ARDJACK_MAX_VALUE_LENGTH]);
 	virtual bool SendInventory(bool includePartConfig = true, bool includeZeroCounts = false);
 	virtual bool SendPartConfig(Part* part);
-	virtual bool SignalChange(Part* part);
+	virtual bool SignalChange_Configuration(Part* part);
+	virtual bool SignalChange_Value(Part* part);
 	virtual bool SendResponse(int oper, const char* aName, const char* text);
 	virtual bool SetNotify(Part* part, bool state);
 	virtual bool SetNotify(int partType, bool state);
